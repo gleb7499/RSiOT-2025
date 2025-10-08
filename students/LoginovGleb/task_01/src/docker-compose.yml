@@ -1,0 +1,71 @@
+################################################################################
+# Compose файл для ЛР01.
+# Принято единое именование ресурсов по шаблону:
+#   slug = as63-220018-v14
+#   Контейнеры: app-<slug>, db-<slug>
+#   Сеть:       net-<slug>
+#   Том:        data-<slug>
+#   Тег образа: gleb7499/lab1-v14:stu-220018-v14
+# Все сервисы получают метки (labels) согласно обновлённым требованиям.
+################################################################################
+# slug: as63-220018-v14
+
+volumes:
+  data-as63-220018-v14:
+    name: data-as63-220018-v14
+
+networks:
+  net-as63-220018-v14:
+    name: net-as63-220018-v14
+    driver: bridge
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: db-as63-220018-v14
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: app_220018_v14
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: app_pass
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "app_user"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - data-as63-220018-v14:/var/lib/postgresql/data
+    networks:
+      - net-as63-220018-v14
+    labels:
+      org.bstu.owner: "gleb7499"
+      org.bstu.student.slug: "as63-220018-v14"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: gleb7499/lab1-v14:stu-220018-v14
+    container_name: app-as63-220018-v14
+    restart: unless-stopped
+    environment:
+      STU_ID: "220018"
+      STU_GROUP: "АС-63"
+      STU_VARIANT: "14"
+      APP_PORT: "8062"
+      APP_HOST: "0.0.0.0"
+      DATABASE_URL: postgresql://app_user:app_pass@db:5432/app_220018_v14
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8062:8062"
+    networks:
+      - net-as63-220018-v14
+    labels:
+      org.bstu.owner: "gleb7499"
+      org.bstu.student.slug: "as63-220018-v14"
+    # Базовые security-настройки (опционально, но полезно):
+    read_only: true
+    tmpfs:
+      - /tmp
