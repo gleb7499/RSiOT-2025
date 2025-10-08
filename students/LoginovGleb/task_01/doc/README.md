@@ -1,14 +1,17 @@
 # Лабораторная работа №1 — Контейнеризация и Docker (Вариант 14)
 
 ## 1. Цель работы
+
 Закрепить навыки контейнеризации приложений с использованием Docker: упаковка Flask-сервиса, настройка healthcheck, graceful shutdown, организация multi-stage сборки, работа с docker compose, использование переменных окружения и метаданных.
 
 ## 2. Шаги сборки и запуска
 
 ### Предварительно
+
 Требуется установленный **Docker Desktop v4.45.0** (или совместимый движок) на **Windows 11 24H2**.
 
 ### Быстрый старт с Make (рекомендуемый способ)
+
 ```powershell
 # Просмотр всех доступных команд
 make help
@@ -31,6 +34,7 @@ make down
 ```
 
 ### Альтернативно через Docker команды
+
 ```powershell
 # Сборка образа вручную с требуемым тегом варианта/студента
 docker build -t gleb7499/lab1-v14:stu-220018-v14 .
@@ -46,7 +50,8 @@ docker compose down
 ```
 
 ## 3. Пример логов работы
-```
+
+```text
 2025-09-16 10:15:04,120 | INFO | ==== Application Startup ==== 
 2025-09-16 10:15:04,121 | INFO | Student ID: 220018
 2025-09-16 10:15:04,121 | INFO | Student Group: АС-63
@@ -65,6 +70,7 @@ docker compose down
 ```
 
 ## 4. Пример запроса к `/healthz`
+
 ```powershell
 # С помощью Make (рекомендуемый способ)
 make health
@@ -75,7 +81,9 @@ Invoke-RestMethod -Uri http://localhost:8062/healthz -Method GET
 # Или с помощью curl
 curl http://localhost:8062/healthz
 ```
+
 Пример ответа:
+
 ```json
 {
   "status": "ok",
@@ -84,7 +92,8 @@ curl http://localhost:8062/healthz
 ```
 
 ## 5. Структура репозитория
-```
+
+```text
 .
 ├── Dockerfile
 ├── docker-compose.yml
@@ -93,14 +102,14 @@ curl http://localhost:8062/healthz
 ├── Makefile
 ├── README.md
 └── src/
-    └── app.py
+  └── app.py
 ```
 
 ## 6. Описание компонентов
+
 - **Flask приложение** (`src/app.py`): маршруты `/` (информация), `/healthz` (health check), `/echo` (POST echo). Логирует учебные ENV и корректно завершается по SIGTERM/SIGINT (graceful shutdown).
 - **Dockerfile**: multi-stage (builder + final), Alpine, непривилегированный пользователь UID 10001, HEALTHCHECK, LABELS (учебные метаданные), pip без кэша.
 - **docker-compose.yml**: сервисы `db` (Postgres 16 Alpine) и `app`; именование по шаблону (app-as63-220018-v14, db-as63-220018-v14, сеть net-as63-220018-v14, том data-as63-220018-v14), метки (labels) на обоих сервисах.
-
 
 ## 7. Метаданные студента (обязательно)
 
@@ -109,7 +118,7 @@ curl http://localhost:8062/healthz
 - **ФИО (полностью):** Логинов Глеб Олегович
 - **Группа:** АС-63
 - **№ студенческого (StudentID):** 220018
-- **Email (учебный):** as006315@g.bstu.by
+- **Email (учебный):** <as006315@g.bstu.by>
 - **GitHub username:** gleb7499
 - **Вариант №:** 14
 - **Дата выполнения:** 08.10.2025
@@ -129,6 +138,7 @@ curl http://localhost:8062/healthz
 - **slug** = as63-220018-v14
 
 ## 8. Дополнительно
+
 - Образ создаётся через multi-stage: зависимости устанавливаются отдельно и копируются в финальный слой для оптимизации размера (<150MB).
 - Используется `HEALTHCHECK`, чтобы оркестратор мог отслеживать состояние контейнера.
 - `ENTRYPOINT` в exec-форме обеспечивает доставку сигналов приложению (graceful shutdown).
@@ -137,6 +147,7 @@ curl http://localhost:8062/healthz
 ## 9. Команды для быстрого теста
 
 ### С помощью Make
+
 ```powershell
 # Проверка состояния контейнеров
 make ps
@@ -155,6 +166,7 @@ make clean
 ```
 
 ### Прямые Docker команды
+
 ```powershell
 # Проверка состояния контейнеров
 docker ps
@@ -170,7 +182,7 @@ curl -X POST http://localhost:8062/echo -H "Content-Type: application/json" -d '
 
 Иногда при запуске `make up` в директории с пробелами или не-ASCII символами (например, кириллицей) Docker Compose может вывести ошибку:
 
-```
+```text
 project name must not be empty
 ```
 

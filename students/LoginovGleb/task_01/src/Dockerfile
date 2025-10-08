@@ -5,7 +5,7 @@ ARG PIP_NO_CACHE_DIR=1
 ENV PYTHONDONTWRITEBYTECODE=1 \
   PYTHONUNBUFFERED=1
 
-RUN apk add --no-cache build-base
+RUN apk add --no-cache build-base=0.5-r3
 
 WORKDIR /app
 
@@ -38,7 +38,7 @@ COPY src/app.py ./
 
 EXPOSE 8062
 
-RUN apk add --no-cache wget \
+RUN apk add --no-cache wget=1.21.4-r0 \
  && echo 'hosts: files dns' > /etc/nsswitch.conf
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \

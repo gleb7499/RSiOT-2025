@@ -33,7 +33,7 @@ def log_startup_metadata():
     logger.info("Student ID: %s", ENV_STU_ID)
     logger.info("Student Group: %s", ENV_STU_GROUP)
     logger.info("Student Variant: %s", ENV_STU_VARIANT)
-    # DB connection info (masked) если есть
+    # DB connection info (masked) if available
     db_url = os.getenv("DATABASE_URL")
     if db_url:
         password = os.getenv("POSTGRES_PASSWORD")
@@ -68,13 +68,17 @@ def index():
     )
 
 
-@app.route("/echo", methods=["POST"])  # небольшая вспомогательная ручка
+@app.route("/echo", methods=["POST"])  # small helper endpoint
 def echo():
     data = request.get_json(silent=True) or {}
     return jsonify({"echo": data, "received_at": datetime.now(timezone.utc).isoformat()})
 
 
 def initiate_graceful_shutdown(signum, frame):  # noqa: ARG001
+    """
+    Signal handler callback for graceful shutdown.
+    The 'signum'      required by    .
+    """
     logger.warning("Received signal %s - initiating graceful shutdown...", signum)
     if not shutdown_requested.is_set():
         logger.info("Stop accepting new connections. Shutdown flag set.")

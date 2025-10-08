@@ -1,6 +1,4 @@
 # Makefile для лабораторной работы (Вариант 14)
-# Адаптирован под Windows 11 PowerShell.
-# Требования: Docker Desktop, PowerShell 5.1+/Core.
 
 SLUG=as63-220018-v14
 COMPOSE_PROJECT_NAME?=$(SLUG)
@@ -14,7 +12,7 @@ POWERSHELL=powershell -NoLogo -NoProfile -Command "[Console]::OutputEncoding=[Sy
 
 .DEFAULT_GOAL := help
 
-.PHONY: help build up start logs app-log db-log ps stiop down rebuild clean prune health inspect-health curl-health kill-term graceful-test shell image-size win-check
+.PHONY: help build up start logs app-log db-log ps stop down rebuild clean prune health inspect-health curl-health kill-term graceful-test shell image-size win-check
 
 help:
 	@echo "Available targets:"
