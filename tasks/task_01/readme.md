@@ -43,23 +43,23 @@
 
 * Dockerfile → LABEL:
   * org.bstu.student.fullname = <ФИО>
-  * org.bstu.student.id = <StudentID>
+  * org.bstu.student.id = StudentID
   * org.bstu.group = <Группа>
   * org.bstu.variant = <Номер варианта>
   * org.bstu.course = RSIOT
 * docker-compose.yml → labels на сервисах:
-  * org.bstu.owner = <GitHub username>
-  * org.bstu.student.slug = <slug>
+  * org.bstu.owner = GitHub username
+  * org.bstu.student.slug = slug
 
-slug = <группа>-<StudentID>-v<вариант> (например, feis-41-12345-v07)
+slug = <группа>-StudentID-v<вариант> (например, feis-41-12345-v07)
 
 ## Требования к именованию
 
-* Теги образов: суффикс :stu-<StudentID>-v<вариант>
-* Имена контейнеров/томов/сетей: включают slug (app-<slug>, data-<slug>, net-<slug>)
+* Теги образов: суффикс :stu-StudentID-v<вариант>
+* Имена контейнеров/томов/сетей: включают slug (app-slug, data-slug, net-slug)
 * ENV: STU_ID, STU_GROUP, STU_VARIANT — логируются при старте
-* Postgres: имя БД app_<StudentID>_v<вариант> (или схема s<StudentID>_v<вариант>)
-* Redis: префикс ключей stu:<StudentID>:v<вариант>:<entity>
+* Postgres: имя БД app_StudentID_v<вариант> (или схема StudentID_v<вариант>)
+* Redis: префикс ключей stu:StudentID:v<вариант>:entity
 
 ## Варианты (45)
 
