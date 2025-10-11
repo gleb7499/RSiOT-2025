@@ -1,0 +1,30 @@
+version: "3.9"
+services:
+  app:
+    build: .
+    image: app:stu-220042-v9
+    container_name: app-as-64-220042-v9
+    ports:
+      - "8071:8071"
+    environment:
+      - STU_ID=220042
+      - STU_GROUP=АS-64
+      - STU_VARIANT=9
+      - REDIS_ADDR=redis:6379
+    depends_on:
+      - redis
+    labels:
+      org.bstu.owner: pyrokekw
+      org.bstu.student.slug: as-64-220042-v9
+
+  redis:
+    image: redis:7
+    container_name: redis-as-64-220042-v9
+    volumes:
+      - data_v9:/data
+    labels:
+      org.bstu.owner: pyrokekw
+      org.bstu.student.slug: as-64-220042-v9
+
+volumes:
+  data_v9:
