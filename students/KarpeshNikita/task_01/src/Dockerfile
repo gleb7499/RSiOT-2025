@@ -1,15 +1,15 @@
 FROM golang:1.22-alpine AS builder
 WORKDIR /app
 COPY src/server.go .
-RUN apk add --no-cache git && \
+RUN apk add --no-cache git=2.43.0-r0 && \
     go mod init server && \
     go get github.com/lib/pq && \
-    go mod tidy
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o server server.go
+    go mod tidy && \
+    CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o server server.go
 
 FROM alpine:3.20
-RUN apk add --no-cache postgresql-client
-RUN adduser -D -u 10001 nonroot
+RUN apk add --no-cache postgresql-client=16.1-r0 && \
+    adduser -D -u 10001 nonroot
 WORKDIR /app
 COPY --from=builder /app/server .
 RUN chown nonroot:nonroot /app/server

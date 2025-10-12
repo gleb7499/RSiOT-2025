@@ -25,11 +25,11 @@ README.md - Документация проекта.
 Сервер будет доступен по адресу http://localhost:8092.
 
 Чтобы вручную построить Docker-image:
+
 ```
 docker build -t go-server .
 docker run -p 8092:8092 go-server
 ```
-
 
 ## Endpoints
 
