@@ -28,11 +28,10 @@
 
 ## Задания
 
-1. Предварительное задание [#0](./tasks/task_00/readme.md)
-2. Лабораторная работа [#1](./tasks/task_01/readme.md)
-3. Лабораторная работа [#2](./tasks/task_02/readme.md)
-4. Лабораторная работа [#3](./tasks/task_03/readme.md)
-5. Лабораторная работа [#4](./tasks/task_04/readme.md)
+1. Лабораторная работа [#1](./tasks/task_01/readme.md)
+2. Лабораторная работа [#2](./tasks/task_02/readme.md)
+3. Лабораторная работа [#3](./tasks/task_03/readme.md)
+4. Лабораторная работа [#4](./tasks/task_04/readme.md)
 
 - Сделайте fork этого репозитория в свой GitHub‑аккаунт.
 - Для каждой ЛР создавайте папку: `students/<NameLatin>/task_xx/{doc,src}`.
