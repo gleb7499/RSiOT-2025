@@ -83,7 +83,7 @@
 | 30 | АС-64 | 6 | 1 | Горкавчук Никита | GorkavchukNikita | [dir](./students/GorkavchukNikita) | [Exage](https://github.com/Exage) |  |  |  |  |  |
 | 31 | АС-64 | 7 | 1 | Евкович Андрей | EvkovichAndrey | [dir](./students/EvkovichAndrey) | [Andrei21005](https://github.com/Andrei21005) |  |  |  |  |  |
 | 32 | АС-64 | 8 | 1 | Иванюк Иван | IvanyukIvan | [dir](./students/IvanyukIvan) | [JonF1re](https://github.com/JonF1re) |  |  |  |  |  |
-| 33 | АС-64 | 9 | 1 | Игнаткевич Кирилл | IgnatkevichKirill | [dir](./students/IgnatkevichKirill) | [pyrokekw](https://github.com/pyrokekw) |✅  |  ✅|  |  |  |
+| 33 | АС-64 | 9 | 1 | Игнаткевич Кирилл | IgnatkevichKirill | [dir](./students/IgnatkevichKirill) | [pyrokekw](https://github.com/pyrokekw) |  |  |  |  |  |
 | 34 | АС-64 | 10 | 1 | Кашпир Дмитрий | KashpirDmitriy | [dir](./students/KashpirDmitriy) | [Dima-kashpir](https://github.com/Dima-kashpir) |  |  |  |  |  |
 | 35 | АС-64 | 11 | 1 | Котковец Кирилл | KotkovetsKirill | [dir](./students/KotkovetsKirill) | [Kirill-Kotkovets](https://github.com/Kirill-Kotkovets) |  |  |  |  |  |
 | 36 | АС-64 | 12 | 2 | Кужир Владислав | KuzhirVladislav | [dir](./students/KuzhirVladislav) | [XD-cods](https://github.com/XD-cods) |  |  |  |  |  |
