@@ -69,13 +69,13 @@ docker run -p 8093:8093 custom-node-server
 curl http://localhost:8093/ready
 ```
 
-# Ожидаемый ответ: OK
+Ожидаемый ответ: OK
 
 ```bash
 curl http://localhost:8093/health
 ```
 
-# Ожидаемый ответ: {"status": "healthy", "redis": "connected"}
+Ожидаемый ответ: {"status": "healthy", "redis": "connected"}
 
 ## Graceful Shutdown
 
@@ -100,4 +100,4 @@ GitHub: Anton777kozlovich
 Вариант задания: 07  
 Дата выполнения: 12.10.2025  
 ОС: Windows 10 Pro 22H2, Ubuntu 22.04  
-Версия Docker: Docker Desktop 4.45.0 / Engine 28.3.3git
+Версия Docker: Docker Desktop 4.45.0 / Engine 28.3.3
