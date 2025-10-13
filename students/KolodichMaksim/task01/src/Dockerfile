@@ -1,15 +1,15 @@
 FROM golang:1.22-alpine AS builder
 WORKDIR /app
 COPY src/server.go .
-RUN apk add --no-cache git && \
+RUN apk add --no-cache git=2.45.2 && \
     go mod init server && \
     go get github.com/redis/go-redis/v9 && \
     go mod tidy
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o server server.go
 
 FROM alpine:3.20
-RUN apk add --no-cache redis
-RUN adduser -D -u 65532 nonroot
+RUN apk add --no-cache redis=7.2.5 && \
+    adduser -D -u 65532 nonroot
 WORKDIR /app
 COPY --from=builder /app/server .
 RUN chown nonroot:nonroot /app/server
