@@ -3,7 +3,7 @@ import signal
 import sys
 import logging
 import threading
-import time
+from urllib.parse import urlsplit, urlunsplit, quote
 from datetime import datetime, timezone
 from flask import Flask, jsonify, request
 
@@ -28,6 +28,44 @@ logger = logging.getLogger("app")
 shutdown_requested = threading.Event()
 
 
+def _mask_db_url(url: str) -> str:
+    """Вернуть URL базы данных с замаскированным паролем.
+
+    Пытается распарсить URL стандартного формата схемы (например, postgresql://user:pass@host:port/db)
+    и заменить пароль на '***'. Если пароля нет или формат нестандартный, возвращает исходный URL
+    либо использует безопасную замену по шаблону как запасной вариант.
+    """
+    try:
+        parts = urlsplit(url)
+        if not parts.netloc:
+            return url
+
+        username = parts.username
+        hostname = parts.hostname or ""
+        port = parts.port
+
+        # Сборка userinfo: username[:***]@
+        userinfo = None
+        if username is not None:
+            userinfo = quote(username)
+            if parts.password is not None:
+                userinfo = f"{userinfo}:***"
+
+        # IPv6: оборачиваем в квадратные скобки при необходимости
+        netloc_host = hostname
+        if ":" in hostname and not hostname.startswith("["):
+            netloc_host = f"[{hostname}]"
+
+        hostport = f"{netloc_host}:{port}" if port is not None else netloc_host
+        netloc = f"{userinfo}@{hostport}" if userinfo is not None else hostport
+
+        return urlunsplit((parts.scheme, netloc, parts.path, parts.query, parts.fragment))
+    except Exception:
+        # Запасной вариант: грубая маска по шаблону :password@
+        import re
+        return re.sub(r":([^:@/]+)@", r":***@", url)
+
+
 def log_startup_metadata():
     logger.info("==== Application Startup ====")
     logger.info("Student ID: %s", ENV_STU_ID)
@@ -36,11 +74,7 @@ def log_startup_metadata():
     # DB connection info (masked) if available
     db_url = os.getenv("DATABASE_URL")
     if db_url:
-        password = os.getenv("POSTGRES_PASSWORD")
-        if password:
-            safe_url = db_url.replace(password, "***")
-        else:
-            safe_url = db_url
+        safe_url = _mask_db_url(db_url)
         logger.info("DATABASE_URL: %s", safe_url)
     for k, v in os.environ.items():
         if k.startswith("STU_"):
@@ -74,10 +108,12 @@ def echo():
     return jsonify({"echo": data, "received_at": datetime.now(timezone.utc).isoformat()})
 
 
-def initiate_graceful_shutdown(signum, frame):  # noqa: ARG001
-    """
-    Signal handler callback for graceful shutdown.
-    The 'signum'      required by    .
+def initiate_graceful_shutdown(signum: int, _frame):
+    """Обработчик сигнала для корректного завершения работы.
+
+    Аргументы:
+        signum (int): номер полученного сигнала.
+        _frame: текущий фрейм стека (не используется).
     """
     logger.warning("Received signal %s - initiating graceful shutdown...", signum)
     if not shutdown_requested.is_set():

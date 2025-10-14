@@ -12,7 +12,7 @@ POWERSHELL=powershell -NoLogo -NoProfile -Command "[Console]::OutputEncoding=[Sy
 
 .DEFAULT_GOAL := help
 
-.PHONY: help build up start logs app-log db-log ps stop down rebuild clean prune health inspect-health curl-health kill-term graceful-test shell image-size win-check
+.PHONY: help build up start logs app-log db-log ps stop down rebuild clean prune health kill-term graceful-test shell image-size
 
 help:
 	@echo "Available targets:"
