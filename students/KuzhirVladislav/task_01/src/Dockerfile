@@ -19,9 +19,8 @@ WORKDIR /app
 COPY --from=builder /install /usr/local
 COPY app.py .
 
-RUN apk add --no-cache curl
-
-RUN chown -R appuser:appuser /app
+RUN apk add --no-cache curl=8.14.1-r2 && \
+    chown -R appuser:appuser /app
 
 ENV FLASK_APP=app.py
 ENV FLASK_ENV=production
