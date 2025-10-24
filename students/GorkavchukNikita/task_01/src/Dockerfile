@@ -10,7 +10,6 @@ COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o server
 
-FROM alpine:3.20
 LABEL org.bstu.student.fullname="Nikita Horkauchuk" \
       org.bstu.student.id="220038" \
       org.bstu.group="as-64" \
