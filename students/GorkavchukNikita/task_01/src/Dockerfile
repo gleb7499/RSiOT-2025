@@ -29,6 +29,6 @@ EXPOSE 8092
 USER 10001
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -fsS http://localhost:8092/health || exit 1
+  CMD wget -qO- http://127.0.0.1:8092/health >/dev/null || exit 1
 
 ENTRYPOINT ["/app/server"]
