@@ -126,6 +126,7 @@ def get_changed_files_from_event(event_or_pr):
         LOG.error('Invalid PR payload; expected dict, got %s', type(pr))
         return []
 
+    # fetch_changed_files_via_api now returns a list of dicts: {'filename': <path>, 'status': <status>}
     files = fetch_changed_files_via_api(pr)
     if files:
         LOG.info('Fetched %d changed files via GitHub API', len(files))
@@ -159,6 +160,9 @@ def fetch_changed_files_via_api(pr):
     if token:
         headers['Authorization'] = f'token {token}'
 
+    # Each entry will be a dict {'filename': <path>, 'status': <status>} where status is
+    # one of 'added', 'modified', 'removed', 'renamed', etc. We keep status so callers
+    # can make decisions (for example: ignore deletions of README.md).
     files = []
     next_url = f"{url}/files?per_page=100"
 
@@ -190,8 +194,10 @@ def fetch_changed_files_via_api(pr):
 
         for item in data:
             filename = item.get('filename')
-            if filename:
-                files.append(filename)
+            if not filename:
+                continue
+            status = item.get('status') or 'modified'
+            files.append({'filename': filename, 'status': status})
 
         next_url = _parse_next_link(link_header)
 
@@ -330,7 +336,22 @@ def main():
     normalized_files = []
     allowed_prefix = allowed.rstrip('/') + '/'
     for f in changed_files:
-        nf = normalize_path(f)
+        # changed_files may contain dicts with filename and status (from GitHub API)
+        if isinstance(f, dict):
+            filename = f.get('filename')
+            status = (f.get('status') or '').lower()
+        else:
+            filename = f
+            status = ''
+
+        nf = normalize_path(filename)
+
+        # Allow deletion of the student's README.md without flagging as "outside allowed dir".
+        # This ignores changes where status == 'removed' and path matches students/<name>/README.md
+        if status == 'removed' and nf.startswith('students/') and nf.endswith('/README.md'):
+            LOG.info('Ignoring removed README file: %s', nf)
+            continue
+
         normalized_files.append(nf)
         in_dir = nf == allowed or nf.startswith(allowed_prefix)
         if not in_dir:
