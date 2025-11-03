@@ -9,12 +9,13 @@ RUN /venv/bin/pip wheel --wheel-dir=/wheels -r requirements.txt
 # ---- final stage ----
 FROM python:3.11-slim
 ARG APP_UID=65532
-RUN groupadd -g ${APP_UID} appgroup || true && useradd -r -u ${APP_UID} -g appgroup -d /nonexistent -s /usr/sbin/nologin appuser || true
+RUN groupadd -g ${APP_UID} appgroup || true
+RUN useradd -r -u ${APP_UID} -g appgroup -d /nonexistent -s /usr/sbin/nologin appuser || true
 WORKDIR /app
 COPY --from=builder /wheels /wheels
 COPY app/requirements.txt ./
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && \
-    pip install --no-index --find-links=/wheels -r requirements.txt && \
+    pip install --no-index --find-links=/wheels --no-cache-dir -r requirements.txt && \
     rm -rf /wheels /var/lib/apt/lists/* /root/.cache
 COPY app /app
 ENV FLASK_APP=app.py \
