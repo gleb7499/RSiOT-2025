@@ -1,0 +1,35 @@
+services:
+  app:
+    build:
+      context: .
+    image: flask-app:stu-220028-v23
+    container_name: app-as-63-220028-v23
+    restart: unless-stopped
+    ports:
+      - "8043:8043"
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      STU_ID: "220028"
+      STU_GROUP: "as-63"
+      STU_VARIANT: "23"
+    volumes:
+      - data_v23:/data
+    depends_on:
+      - redis
+    labels:
+      org.bstu.owner: "alexsandro007"
+      org.bstu.student.slug: "as-63-220028-v23"
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis-as-63-220028-v23
+    command: ["redis-server", "--appendonly", "yes", "--dir", "/data"]
+    volumes:
+      - data_v23:/data
+    labels:
+      org.bstu.owner: "alexsandro007"
+      org.bstu.student.slug: "as-63-220028-v23"
+
+volumes:
+  data_v23:
