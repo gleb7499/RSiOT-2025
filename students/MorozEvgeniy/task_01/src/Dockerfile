@@ -1,0 +1,37 @@
+﻿# Используем официальный Python образ
+FROM golang:1.25-alpine AS builder
+
+WORKDIR /app
+
+COPY go.mod go.sum ./
+
+RUN go mod download
+
+COPY src/ ./src/
+
+RUN CGO_ENABLED=0 go build -o /server ./src/main.go
+
+FROM alpine:latest
+
+LABEL org.bstu.student.fullname="Мороз Евгений Васильевич"
+LABEL org.bstu.student.id="220019"
+LABEL org.bstu.group="АС-63"
+LABEL org.bstu.variant="15"
+LABEL org.bstu.course="RSIOT"
+
+WORKDIR /
+
+COPY --from=builder /server /server
+
+RUN apk --no-cache add curl
+
+EXPOSE 8063
+
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup -u 65532
+
+USER appuser
+
+HEALTHCHECK --interval=15s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:8063/ping || exit 1
+
+ENTRYPOINT ["/server"]
