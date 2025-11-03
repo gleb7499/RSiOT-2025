@@ -58,28 +58,43 @@
 - Установлен **USER 10001** (ненулевой UID)
 - Минимальный размер финального образа ≤ 150 MB
 - Настроено кэширование зависимостей:
+
   ```Dockerfile
+  
   --mount=type=cache,target=/go/pkg/mod
   --mount=type=cache,target=/root/.cache/go-build
+
   ```
+
 - Реализован HEALTHCHECK:
+
   ```Dockerfile
+
   HEALTHCHECK --interval=10s --timeout=2s --retries=5     CMD ["/app/app", "-test.healthcheck"]
+
   ```
+
 - Переменные окружения:
+
   ```
+
   STU_ID=220023
   STU_GROUP=АС-63
   STU_VARIANT=18
   PGDATABASE=app_220023_v18
+
   ```
+
 - LABEL’ы с метаданными студента:
+
   ```
+
   org.bstu.student.fullname="Савко Павел Станиславович"
   org.bstu.student.id="220023"
   org.bstu.group="АС-63"
   org.bstu.variant="18"
   org.bstu.course="RSIOT"
+
   ```
 
 ---
@@ -96,9 +111,12 @@
 - HEALTHCHECK `/live`
 - Переменные окружения передаются через ENV
 - Метки:
+
   ```
+
   org.bstu.owner = "1nsirius"
   org.bstu.student.slug = "as-63-220023-v18"
+
   ```
 
 ---
@@ -106,13 +124,16 @@
 ### 4. Реализация graceful shutdown
 
 В коде Go-приложения реализована обработка сигналов:
+
 ```go
+
 sig := make(chan os.Signal, 1)
 signal.Notify(sig, syscall.SIGTERM, syscall.SIGINT)
 <-sig
 ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 defer cancel()
 server.Shutdown(ctx)
+
 ```
 При остановке контейнера (`docker compose down`) сервис корректно завершает работу, закрывая соединение с БД и завершая все активные запросы.
 
@@ -121,28 +142,40 @@ server.Shutdown(ctx)
 ### 5. Проверка работы
 
 #### Запуск
+
 ```bash
+
 docker compose up --build
+
 ```
 
 #### Логи старта
+
 ```
+
 [INFO] Starting app on 0.0.0.0:8052
 [INFO] Connected to Postgres db=app_220023_v18
 [INFO] Health endpoint: /live
+
 ```
 
 #### Проверка healthcheck
+
 ```
+
 $ curl http://localhost:8052/live
 OK
+
 ```
 
 #### Корректное завершение
+
 ```
+
 [INFO] Received SIGTERM
 [INFO] Shutting down HTTP server gracefully...
 [INFO] Shutdown complete.
+
 ```
 
 ---
