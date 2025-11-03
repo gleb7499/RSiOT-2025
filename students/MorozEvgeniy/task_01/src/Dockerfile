@@ -11,7 +11,7 @@ COPY main.go ./
 
 RUN CGO_ENABLED=0 go build -o /server main.go
 
-FROM alpine:latest
+FROM alpine:3.18
 
 LABEL org.bstu.student.fullname="Мороз Евгений Васильевич"
 LABEL org.bstu.student.id="220019"
@@ -23,7 +23,7 @@ WORKDIR /
 
 COPY --from=builder /server /server
 
-RUN apk --no-cache add curl
+RUN apk --no-cache add curl=8.4.0-r0
 
 EXPOSE 8063
 

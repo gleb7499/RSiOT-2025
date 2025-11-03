@@ -52,6 +52,7 @@
 ---
 
 ### 2. Dockerfile (основные моменты)
+
 Dockerfile использует multi-stage build, что позволяет получить минимальный финальный образ.
 
 Этап builder: используется образ `golang:1.25-alpine` для сборки приложения.
@@ -78,7 +79,6 @@ HEALTHCHECK: Настроен эндпоинт /ping с использовани
 
 ### 3. docker-compose.yml
 
-3. docker-compose.yml
 Файл оркестрации включает два сервиса: app (Go-приложение) и redis (база данных).
 
 Slug: Определен слаг для уникальности ресурсов: `as-63-220019-v15`.
@@ -111,16 +111,16 @@ Volume: Подключен именованный том `data-as-63-220019-v15`
 
 ```go
 
-    quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM) 
+quit := make(chan os.Signal, 1)
+signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 
-	<-quit 
-	log.Println("Получен сигнал для завершения работы. Начинаю остановку сервера...")
+<-quit
+log.Println("Получен сигнал для завершения работы. Начинаю остановку сервера...")
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second) 
-	defer cancel()
+ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+defer cancel()
 
-	if err := server.Shutdown(ctx); err != nil {}
+if err := server.Shutdown(ctx); err != nil {}
 
 ```
 
@@ -138,7 +138,7 @@ docker compose up --build
 
 ```
 
-### Эндпоинты приложения:
+### Эндпоинты приложения
 
 `/ping — Healthcheck`, возвращает OK.
 
