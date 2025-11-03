@@ -60,7 +60,7 @@
 - Настроено кэширование зависимостей:
 
   ```Dockerfile
-  
+
   --mount=type=cache,target=/go/pkg/mod
   --mount=type=cache,target=/root/.cache/go-build
 
@@ -135,6 +135,7 @@ defer cancel()
 server.Shutdown(ctx)
 
 ```
+
 При остановке контейнера (`docker compose down`) сервис корректно завершает работу, закрывая соединение с БД и завершая все активные запросы.
 
 ---
