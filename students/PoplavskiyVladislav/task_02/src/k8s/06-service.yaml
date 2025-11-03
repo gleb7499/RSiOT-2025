@@ -1,0 +1,22 @@
+﻿apiVersion: v1
+kind: Service
+metadata:
+  name: web17-service
+  namespace: app17
+  labels:
+    app: web17
+    org.bstu.student.fullname: "Vladislav_Vladimirovich_Poplavsky"
+    org.bstu.student.id: "220021"
+    org.bstu.group: "ASOI_63"
+    org.bstu.variant: "17"
+    org.bstu.course: "RSIOT"
+    org.bstu.owner: "ImRaDeR1"
+    org.bstu.student.slug: "asoi-63-220021-v17"
+spec:
+  selector:
+    app: web17
+  ports:
+  - port: 8051
+    targetPort: 8051
+    nodePort: 30085
+  type: NodePort
