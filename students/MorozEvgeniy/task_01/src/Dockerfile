@@ -1,15 +1,15 @@
-﻿# Используем официальный Python образ
-FROM golang:1.25-alpine AS builder
+﻿FROM golang:1.25-alpine AS builder
 
 WORKDIR /app
 
 COPY go.mod go.sum ./
 
-RUN go mod download
+RUN --mount=type=cache,target=/go/pkg/mod \
+    go mod download
 
-COPY src/ ./src/
+COPY main.go ./
 
-RUN CGO_ENABLED=0 go build -o /server ./src/main.go
+RUN CGO_ENABLED=0 go build -o /server main.go
 
 FROM alpine:latest
 

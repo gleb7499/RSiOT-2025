@@ -41,11 +41,16 @@ func main() {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK) 
+		w.WriteHeader(http.StatusOK)
 		fmt.Fprintln(w, "OK")
 	})
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/" {
+			http.NotFound(w, r)
+			return
+		}
+
 		visitKey := fmt.Sprintf("stu:%s:v%s:visits", studentID, studentVariant)
 		count, err := rdb.Incr(context.Background(), visitKey).Result()
 		if err != nil {
