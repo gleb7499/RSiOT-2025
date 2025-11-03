@@ -13,6 +13,7 @@ LABEL org.bstu.student.fullname="Савко Павел Станиславови�
 WORKDIR /src
 
 # Minimal build deps
+# hadolint ignore=DL3018
 RUN apk add --no-cache ca-certificates tzdata && update-ca-certificates
 
 # Cache go modules first
