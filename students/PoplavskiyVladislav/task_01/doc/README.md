@@ -1,13 +1,13 @@
 # «Метаданные студента»
 
-Full name: Vladislav Vladimirovich Poplavsky  
-Group: ASOI 63  
-Student ID: 220021  
-Email: as006318@g.bstu.by  
-GitHub: ImRaDeR1  
-Variant: 17  
-Date: 2025-11-03  
-OS: Windows 10 / Docker Desktop 4.33.0  
+Full name: Vladislav Vladimirovich Poplavsky
+Group: ASOI 63
+Student ID: 220021
+Email: as006318@g.bstu.by
+GitHub: ImRaDeR1
+Variant: 17
+Date: 2025-11-03
+OS: Windows 10 / Docker Desktop 4.33.0
 
 ## RSOT
 
@@ -26,9 +26,7 @@ docker compose up -d --build
 Invoke-RestMethod http://localhost:8044/ready
 ```
 
-status
-------
-ok
+status ------ ok
 
 Студент: 17, Группа: feis, Вариант: v17, Кол-во визитов: 4
 
