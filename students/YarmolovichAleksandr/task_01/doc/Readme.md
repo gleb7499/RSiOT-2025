@@ -19,6 +19,7 @@
 git clone https://github.com/yarmolov/RSOT/Lab1.git
 cd RSOT
 ```
+
 ### 2. Сбор и запуск контейнера
 
 ```bash
@@ -32,6 +33,7 @@ cd RSOT
 ```bash
 Invoke-RestMethod http://localhost:8044/healthz
 ```
+
 Content           : OK
 
 #### 3.2 Readiness
@@ -39,6 +41,7 @@ Content           : OK
 ```bash
 Invoke-RestMethod http://localhost:8044/ready
 ```
+
 Content           : READY
 
 #### 3.3 Posgres
@@ -46,6 +49,7 @@ Content           : READY
 ```bash
 Invoke-RestMethod -Uri http://localhost:8044/visit
 ```
+
 Студент: 24, Группа: feis, Вариант: v24, Кол-во визитов: 4
 
 ### 4. Остановка и удаление контейнера
