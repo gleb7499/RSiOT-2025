@@ -2,8 +2,8 @@
 FROM python:3.11-slim AS builder
 WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    ca-certificates \
+    build-essential=12.9 \
+    ca-certificates=20230610 \
     && rm -rf /var/lib/apt/lists/*
 COPY app/requirements.txt ./
 RUN python -m venv /venv && /venv/bin/pip install --upgrade pip
@@ -13,11 +13,11 @@ RUN /venv/bin/pip wheel --wheel-dir=/wheels -r requirements.txt
 FROM python:3.11-slim
 ARG APP_UID=65532
 RUN groupadd -g ${APP_UID} appgroup || true
-RUN useradd -r -u ${APP_UID} -g appgroup -m -d /home/appuser -s /usr/sbin/nologin appuser || true
+RUN useradd -l -r -u ${APP_UID} -g appgroup -m -d /home/appuser -s /usr/sbin/nologin appuser || true
 WORKDIR /app
 COPY --from=builder /wheels /wheels
 COPY app/requirements.txt ./
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && \
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates=20230610 && \
     pip install --no-index --find-links=/wheels --no-cache-dir -r requirements.txt && \
     rm -rf /wheels /var/lib/apt/lists/* /root/.cache
 COPY app /app
