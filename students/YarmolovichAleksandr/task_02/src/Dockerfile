@@ -19,7 +19,7 @@ RUN go build -o server ./src
 FROM alpine:3.20
 
 # Добавляем curl для healthcheck
-RUN apk add --no-cache curl
+RUN apk add --no-cache curl=8.2.1-r0
 
 WORKDIR /app
 USER 10001:10001

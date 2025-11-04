@@ -17,18 +17,18 @@
 <br><br><br><br><br>
 <p align="center"><strong>Брест 2025</strong></p>
 
-# «Метаданные студента»
+## «Метаданные студента»
 
 - ФИО - Ярмолович Александр Сергеевич
 - Группа - АС-63
 - № студенческого/зачетной книжки (StudentID) - 220029
-- Email (учебный) -as006326@g.bstu.by 
+- Email (учебный) -as006326@g.bstu.by
 - GitHub username - yarmolov
 - Вариант № - 24
 - Дата выполнения - 04.11.2025
 - ОС (версия), версия Docker Desktop/Engine - Windows 10, Docker version 28.4.0, kubectl 1.30.5
 
-# RSOT Проект
+## RSOT Проект
 
 Это пример минимального HTTP-сервиса и набор Kubernetes-манифестов для лабораторной работы. Включает:
 
@@ -39,15 +39,15 @@
 * Настройки liveness/readiness probes
 * Инструкции локального тестирования (kubectl)
 
-## 1. Запуск образа
+### 1. Запуск образа
 
 ```bash
 - docker compose up -d --build
 ```
 
-## 2. Развертывание HTTP-сервиса в Kubernetes
+### 2. Развертывание HTTP-сервиса в Kubernetes
 
-### 2.1 Проверка текущего контекста Kubernetes
+#### 2.1 Проверка текущего контекста Kubernetes
 
 ```bash
 - kubectl config current-context
@@ -56,7 +56,7 @@
 
 Смотрим с каким класстером мы работаем и доступны ли ноды.
 
-### 2.2 Сборка Docker-образа
+#### 2.2 Сборка Docker-образа
 
 ```bash
 - docker build -t http-service:local .
@@ -64,7 +64,7 @@
 
 Создаём локальный образ сервиса.
 
-### 2.3 Установка Ingress NGINX
+#### 2.3 Установка Ingress NGINX
 
 ```bash
 - kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.11.1/deploy/static/provider/cloud/deploy.yaml
@@ -72,7 +72,7 @@
 
 Установка NGINX.
 
-### 2.4 Создание Namespace
+#### 2.4 Создание Namespace
 
 ```bash
 kubectl apply -f k8s/namespace.yaml
@@ -80,7 +80,7 @@ kubectl apply -f k8s/namespace.yaml
 
 Создание отдельного пространства имён.
 
-### 2.5 Применение манифестов приложения
+#### 2.5 Применение манифестов приложения
 
 ```bash
 kubectl apply -f k8s/web-configmap.yaml
@@ -93,7 +93,7 @@ kubectl apply -f k8s/web-0service.yaml
 
 Создайте все необходимые ресурсы Kubernetes в нашем namespace.
 
-### 2.6 Применение Ingress
+#### 2.6 Применение Ingress
 
 ```bash
 kubectl apply -f k8s/ingress.yaml
@@ -101,7 +101,7 @@ kubectl apply -f k8s/ingress.yaml
 
 Настройка доступа к приложению через Ingress.
 
-### 2.7 Добавление записи в /etc/hosts
+#### 2.7 Добавление записи в /etc/hosts
 
 ```bash
 sudo sh -c "echo '127.0.0.1 web24.local' >> /etc/hosts"
@@ -109,15 +109,15 @@ sudo sh -c "echo '127.0.0.1 web24.local' >> /etc/hosts"
 
 Добавляет локальную запись для доступа к нашему приложению.
 
-### 2.8 Просмотр работоспособности подов
+#### 2.8 Просмотр работоспособности подов
 
 ```bash
 kubectl get pods -n app24
 ```
 
-## 3. Подтвердить приложение
+### 3. Подтвердить приложение
 
-### 3.1 Liveness
+#### 3.1 Liveness
 
 ```bash
 curl http://web24.local/healthz
@@ -125,7 +125,7 @@ curl http://web24.local/healthz
 
 Content           : OK
 
-### 3.2 Readiness
+#### 3.2 Readiness
 
 ```bash
 curl http://web24.local/ready
@@ -133,7 +133,7 @@ curl http://web24.local/ready
 
 Content           : READY
 
-### 3.3 Posgres
+#### 3.3 Posgres
 
 ```bash
 http://web24.local/visit
@@ -141,21 +141,21 @@ http://web24.local/visit
 
 Студент: 24, Группа: feis, Вариант: v24, Кол-во визитов: 4
 
-## 4. Просмотр логов
+### 4. Просмотр логов
 
-### 4.1 Просмотр логов бд
+#### 4.1 Просмотр логов бд
 
 ```bash
 kubectl logs db-74d5cd88bd-s5ttt -n app24
 ```
 
-### 4.2 Просмотр логов аpp
+#### 4.2 Просмотр логов аpp
 
 ```bash
 kubectl logs <app-name> -n app24
 ```
 
-## 5. Очистка ресурсов
+### 5. Очистка ресурсов
 
 ```bash
 kubectl delete -f k8s/ingress.yaml
@@ -167,7 +167,7 @@ kubectl delete -f k8s/configmap.yaml
 kubectl delete -f k8s/namespace.yaml
 ```
 
-## 6. Краткое описание проделанных действий
+### 6. Краткое описание проделанных действий
 
 * Deployment — создан с типом стратегии RollingUpdate, добавлены ресурсные лимиты и запросы (resources.limits/requests) для контейнера.
 * Service — настроен для доступа к приложению.
