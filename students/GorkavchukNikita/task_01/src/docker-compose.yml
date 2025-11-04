@@ -1,0 +1,41 @@
+---
+services:
+  app:
+    image: my-go-app:stu-220038-v6
+    build: .
+    container_name: app-as-64-220038-v6
+    ports:
+      - "8092:8092"
+    environment:
+      - DATABASE_URL=postgres://user:password@postgres:5432/app_220038_v6?sslmode=disable
+      - STU_ID=220038
+      - STU_GROUP=as-64
+      - STU_VARIANT=6
+    labels:
+      org.bstu.owner: n-horkavchuk
+      org.bstu.student.slug: as-64-220038-v6
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16
+    container_name: postgres-as-64-220038-v6
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: app_220038_v6
+    volumes:
+      - data-as-64-220038-v6:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    labels:
+      org.bstu.owner: n-horkavchuk
+      org.bstu.student.slug: as-64-220038-v6
+
+volumes:
+  data-as-64-220038-v6:
+
+networks:
+  default:
+    name: net-as-64-220038-v6
