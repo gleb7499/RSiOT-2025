@@ -1,0 +1,13 @@
+{
+  "name": "lab01-node-app",
+  "version": "1.0.0",
+  "description": "LR01 variant 19 - Node/Express app",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "redis": "^5.8.3"
+  }
+}

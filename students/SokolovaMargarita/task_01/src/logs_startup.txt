@@ -1,0 +1,5 @@
+node-app-220024-v19  | Server listening on http://0.0.0.0:8053
+node-app-220024-v19  | Redis подключен: redis://redis:6379
+node-app-220024-v19  | SIGTERM/SIGINT получен — начинаем корректный shutdown...
+node-app-220024-v19  | Redis корректно завершён
+node-app-220024-v19  | HTTP сервер остановлен
