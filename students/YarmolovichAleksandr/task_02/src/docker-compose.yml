@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: postgres-feis-24-v24
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: appdb
+    volumes:
+      - data_v24:/var/lib/postgresql/data
+    restart: unless-stopped
+    labels:
+      org.bstu.owner: "your-github-username"
+      org.bstu.student.slug: "feis-24-v24"
+
+  app:
+    build: .
+    container_name: app-feis-24-v24
+    ports:
+      - "8044:8044"
+    environment:
+      - PORT=8044
+      - STU_ID=24
+      - STU_GROUP=feis
+      - STU_VARIANT=v24
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=appdb
+    depends_on:
+      - db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8044/healthz"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    labels:
+      org.bstu.owner: "your-github-username"
+      org.bstu.student.slug: "feis-24-v24"
+
+volumes:
+  data_v24:
+
