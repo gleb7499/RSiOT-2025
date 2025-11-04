@@ -1,0 +1,8 @@
+node_modules/
+package-lock.json
+dist/
+*.log
+*.tmp
+.DS_Store
+lab1-met.md 
+lab1.md
