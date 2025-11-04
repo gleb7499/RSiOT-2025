@@ -1,0 +1,52 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    image: flask-app:stu-220047-v26
+    container_name: app-AC-64-220047-v26
+    ports:
+      - "8032:8032"
+    environment:
+      - DATABASE_URL=postgresql://appuser:password@postgres:5432/app_220047_v2
+      - STU_ID=220047
+      - STU_GROUP=AC-64
+      - STU_VARIANT=26
+    depends_on:
+      - postgres
+    labels:
+      - "org.bstu.owner=XD-cods"
+      - "org.bstu.student.slug=AC-64-220047-v26"
+    networks:
+      - net-AC-64-220047-v26
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8032/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  postgres:
+    image: postgres:13-alpine
+    container_name: postgres-AC-64-220047-v26
+    environment:
+      - POSTGRES_DB=app_220047_v2
+      - POSTGRES_USER=appuser
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - data_v2:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - net-AC-64-220047-v26
+    labels:
+      - "org.bstu.owner=XD-cods"
+      - "org.bstu.student.slug=AC-64-220047-v26"
+
+volumes:
+  data_v2:
+    name: data-AC-64-220047-v26
+
+networks:
+  net-AC-64-220047-v26:
+    name: net-AC-64-220047-v26
