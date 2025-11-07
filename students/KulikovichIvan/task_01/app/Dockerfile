@@ -1,7 +1,7 @@
 FROM python:3.11-slim as builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
+    gcc=4:* \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -13,7 +13,7 @@ FROM python:3.11-slim
 RUN groupadd -r appuser && useradd -r -g appuser appuser
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
+    curl=7.* \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
