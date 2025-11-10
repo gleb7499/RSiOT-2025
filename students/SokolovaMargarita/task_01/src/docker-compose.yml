@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    image: ritkas33395553/lr01-node-v19:v19
+    container_name: node-app-220024-v19
+    ports:
+      - "8053:8053"      # внешний порт 8053 → внутренний 8053
+    environment:
+      - PORT=8053
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    labels:
+      org.bstu.owner: "Ritkas33395553"
+      org.bstu.student.slug: "as-63-220024-v19"
+    volumes:
+      - data_v19:/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis-v19
+    restart: unless-stopped
+    volumes:
+      - data_v19:/data
+    labels:
+      org.bstu.owner: "Ritkas33395553"
+      org.bstu.student.slug: "as-63-220024-v19"
+
+volumes:
+  data_v19:

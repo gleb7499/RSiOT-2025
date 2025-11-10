@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.pyo
+*.md
+*.log
+init.sql
+README*

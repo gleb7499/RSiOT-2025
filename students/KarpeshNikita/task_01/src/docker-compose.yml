@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: app:v6
+    container_name: app-v6
+    environment:
+      - PORT=8092
+      - STU_ID=220009
+      - STU_GROUP=as-63
+      - STU_VARIANT=06
+      - POSTGRES_HOST=db-v6
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=appuser
+      - POSTGRES_PASSWORD=apppass
+      - POSTGRES_DB=app_220009_v6
+    ports:
+      - "8092:8092"
+    labels:
+      - org.bstu.owner=Frosyka
+      - org.bstu.student.slug=as-63-220009-v06
+    networks:
+      - net-v6
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    container_name: db-v6
+    environment:
+      - POSTGRES_USER=appuser
+      - POSTGRES_PASSWORD=apppass
+      - POSTGRES_DB=app_220009_v6
+    volumes:
+      - data_v6:/var/lib/postgresql/data
+    labels:
+      - org.bstu.owner=Frosyka
+      - org.bstu.student.slug=as-63-220009-v06
+    networks:
+      - net-v6
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U appuser -d app_220009_v6"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  data_v6:
+
+networks:
+  net-v6:
+    driver: bridge

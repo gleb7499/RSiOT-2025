@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: node-express-service:stu-220046-v10
+    container_name: app-AC-63-220046-v10
+    ports:
+      - "8072:8072"
+    environment:
+      - PORT=8072
+      - DB_HOST=db-AC-63-220046-v10
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=app_220046_v10
+      - DB_PORT=5432
+      - STU_ID=220046
+      - STU_GROUP=AC-63
+      - STU_VARIANT=10
+    depends_on:
+      - db
+    labels:
+      - org.bstu.owner=ivanovii
+      - org.bstu.student.slug=AC-63-220046-v10
+    user: "10001"
+    networks:
+      - net-AC-63-220046-v10
+
+  db:
+    image: postgres:15-alpine
+    container_name: db-AC-63-220046-v10
+    environment:
+      - POSTGRES_DB=app_220046_v10
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - data-AC-63-220046-v10:/var/lib/postgresql/data
+    networks:
+      - net-AC-63-220046-v10
+
+volumes:
+  data-v10:
+
+networks:
+  net-AC-63-220046-v10:
