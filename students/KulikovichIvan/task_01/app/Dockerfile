@@ -6,13 +6,12 @@ RUN pip install --user --no-cache-dir -r requirements.txt
 
 FROM python:3.11-alpine
 
-RUN adduser -D appuser
-RUN apk add --no-cache curl
+RUN adduser -D appuser && \
+    apk add --no-cache curl=8.9.1-r0
 
 WORKDIR /app
 
 COPY --from=builder --chown=appuser:appuser /root/.local /home/appuser/.local
-
 COPY --chown=appuser:appuser main.py .
 
 ENV PATH=/home/appuser/.local/bin:$PATH
