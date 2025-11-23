@@ -11,6 +11,7 @@
 - `docker-compose.yml` - Конфигурация для запуска стека сервисов
 - `requirements.txt`- Файл для установки зависимостей
 - `main.py`- Основной код
+- `.dockerignore` - файл, который указывает Docker, какие файлы и папки игнорировать при сборке образа
 - `doc/` - Документация
 - `README.md` - Документация проекта
 
@@ -23,15 +24,15 @@
 
 ## Запуск проекта
 
+## Ручная сборка и запуск
+
+docker build -t app-as-63-220015:stu-220015-v11 .
+docker-compose up -d
+
 ### Сборка и запуск через Docker Compose
 
 docker-compose up --build
 Приложение будет доступно по адресу: http://localhost:8073
-
-## Ручная сборка и запуск
-
-docker build -t web-app .
-docker run -p 8073:8073 web-app
 
 ## Функциональность
 
@@ -51,6 +52,10 @@ docker inspect web-app:stu-220015-v11 | grep -A 10 "Labels"
 docker-compose down
 В логах должно появиться сообщение о начале graceful shutdown.
 
+## Проверка размера образа
+
+docker images app-as-63-220015:stu-220015-v11
+
 ## Проверка health check
 
 docker ps
@@ -64,7 +69,7 @@ docker ps
 
 Номер студенческого: 220015
 
-Email: twinkgames1035@mail.ru
+Email: AS006312@g.bstu.by
 
 GitHub username: teenage717
 

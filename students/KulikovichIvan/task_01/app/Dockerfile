@@ -1,31 +1,29 @@
-FROM python:3.11-slim as builder
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc=4:* \
-    && rm -rf /var/lib/apt/lists/*
+FROM python:3.11-alpine AS builder
 
 WORKDIR /app
-COPY app/requirements.txt .
-RUN pip install --no-cache-dir --target=/app/dependencies -r requirements.txt
+COPY requirements.txt .
+RUN pip install --user --no-cache-dir -r requirements.txt
 
-FROM python:3.11-slim
+FROM python:3.11-alpine
 
-RUN groupadd -r appuser && useradd -r -g appuser appuser
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl=7.* \
-    && rm -rf /var/lib/apt/lists/*
+RUN adduser -D appuser
+RUN apk add --no-cache curl
 
 WORKDIR /app
-COPY --from=builder /app/dependencies /app/dependencies
-COPY app/ .
 
-ENV PYTHONPATH=/app/dependencies:$PYTHONPATH
-ENV PATH=/app/dependencies/bin:$PATH
+COPY --from=builder --chown=appuser:appuser /root/.local /home/appuser/.local
 
-ENV APP_PORT=8000
+COPY --chown=appuser:appuser main.py .
+
+ENV PATH=/home/appuser/.local/bin:$PATH
+ENV PYTHONPATH=/home/appuser/.local/lib/python3.11/site-packages
+
+ENV APP_PORT=8073
 ENV REDIS_HOST=redis
 ENV REDIS_PORT=6379
+ENV STU_ID=220015
+ENV STU_GROUP=AS-63
+ENV STU_VARIANT=11
 
 EXPOSE ${APP_PORT}
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \

@@ -8,7 +8,7 @@ services:
         STU_ID: "220015"
         STU_GROUP: "AS-63" 
         STU_VARIANT: "11"
-    image: app-as-63-220015:v11
+    image: app-as-63-220015:stu-220015-v11
     container_name: app-as-63-220015-v11
     ports:
       - "8073:8073"
