@@ -57,9 +57,9 @@
 | 4 | АС-63 | 4 | 1 | Грицук Павел | GritsukPavel | [dir](./students/GritsukPavel) | [momo-kitsune](https://github.com/momo-kitsune) |  |  |  |  |  |
 | 5 | АС-63 | 5 | 1 | Казаренко Павел | KazarenkoPavel | [dir](./students/KazarenkoPavel) | [Catsker](https://github.com/Catsker) |  |  |  |  |  |
 | 6 | АС-63 | 6 | 1 | Карпеш Никита | KarpeshNikita | [dir](./students/KarpeshNikita) | [Frosyka](https://github.com/Frosyka) | 100+10 |  |  |  |  |
-| 7 | АС-63 | 7 | 1 | Козлович Антон | KozlovichAnton | [dir](./students/KozlovichAnton) | [Anton777kozlovich](https://github.com/Anton777kozlovich) |  |  |  |  |  |
+| 7 | АС-63 | 7 | 1 | Козлович Антон | KozlovichAnton | [dir](./students/KozlovichAnton) | [Anton777kozlovich](https://github.com/Anton777kozlovich) | 88 |  |  |  |  |
 | 8 | АС-63 | 8 | 1 | Козловская Анна | KozlovskayaAnna | [dir](./students/KozlovskayaAnna) | [annkrq](https://github.com/annkrq) |  |  |  |  |  |
-| 9 | АС-63 | 9 | 1 | Колодич Максим | KolodichMaksim | [dir](./students/KolodichMaksim) | [proxladno](https://github.com/proxladno) |  |  |  |  |  |
+| 9 | АС-63 | 9 | 1 | Колодич Максим | KolodichMaksim | [dir](./students/KolodichMaksim) | [proxladno](https://github.com/proxladno) | 89 |  |  |  |  |
 | 10 | АС-63 | 10 | 1 | Крагель Алина | KragelAlina | [dir](./students/KragelAlina) | [Alina529](https://github.com/Alina529) | 100+10 |  |  |  |  |
 | 11 | АС-63 | 11 | 2 | Куликович Иван | KulikovichIvan | [dir](./students/KulikovichIvan) | [teenage717](https://github.com/teenage717) |  |  |  |  |  |
 | 12 | АС-63 | 12 | 2 | Кульбеда Кирилл | KulbedaKirill | [dir](./students/KulbedaKirill) | [fr0ogi](https://github.com/fr0ogi) |  |  |  |  |  |
