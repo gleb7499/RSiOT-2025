@@ -56,11 +56,19 @@
 | 3 | АС-63 | 3 | 1 | Грицук Дмитрий | GritsukDmitriy | [dir](./students/GritsukDmitriy) | [llayyz](https://github.com/llayyz) |  |  |  |  |  |
 | 4 | АС-63 | 4 | 1 | Грицук Павел | GritsukPavel | [dir](./students/GritsukPavel) | [momo-kitsune](https://github.com/momo-kitsune) |  |  |  |  |  |
 | 5 | АС-63 | 5 | 1 | Казаренко Павел | KazarenkoPavel | [dir](./students/KazarenkoPavel) | [Catsker](https://github.com/Catsker) |  |  |  |  |  |
+<<<<<<< HEAD
 | 6 | АС-63 | 6 | 1 | Карпеш Никита | KarpeshNikita | [dir](./students/KarpeshNikita) | [Frosyka](https://github.com/Frosyka) |  |  |  |  |  |
 | 7 | АС-63 | 7 | 1 | Козлович Антон | KozlovichAnton | [dir](./students/KozlovichAnton) | [Anton777kozlovich](https://github.com/Anton777kozlovich) |  |  |  |  |  |
 | 8 | АС-63 | 8 | 1 | Козловская Анна | KozlovskayaAnna | [dir](./students/KozlovskayaAnna) | [annkrq](https://github.com/annkrq) |  |  |  |  |  |
 | 9 | АС-63 | 9 | 1 | Колодич Максим | KolodichMaksim | [dir](./students/KolodichMaksim) | [proxladno](https://github.com/proxladno) |  |  |  |  |  |
 | 10 | АС-63 | 10 | 1 | Крагель Алина | KragelAlina | [dir](./students/KragelAlina) | [Alina529](https://github.com/Alina529) |  |  |  |  |  |
+=======
+| 6 | АС-63 | 6 | 1 | Карпеш Никита | KarpeshNikita | [dir](./students/KarpeshNikita) | [Frosyka](https://github.com/Frosyka) | 100+10 |  |  |  |  |
+| 7 | АС-63 | 7 | 1 | Козлович Антон | KozlovichAnton | [dir](./students/KozlovichAnton) | [Anton777kozlovich](https://github.com/Anton777kozlovich) | 88 |  |  |  |  |
+| 8 | АС-63 | 8 | 1 | Козловская Анна | KozlovskayaAnna | [dir](./students/KozlovskayaAnna) | [annkrq](https://github.com/annkrq) |  |  |  |  |  |
+| 9 | АС-63 | 9 | 1 | Колодич Максим | KolodichMaksim | [dir](./students/KolodichMaksim) | [proxladno](https://github.com/proxladno) | 89 |  |  |  |  |
+| 10 | АС-63 | 10 | 1 | Крагель Алина | KragelAlina | [dir](./students/KragelAlina) | [Alina529](https://github.com/Alina529) | 100+10 |  |  |  |  |
+>>>>>>> 9ef9faccb75a1026a976e57c875917fecb3c0cb5
 | 11 | АС-63 | 11 | 2 | Куликович Иван | KulikovichIvan | [dir](./students/KulikovichIvan) | [teenage717](https://github.com/teenage717) |  |  |  |  |  |
 | 12 | АС-63 | 12 | 2 | Кульбеда Кирилл | KulbedaKirill | [dir](./students/KulbedaKirill) | [fr0ogi](https://github.com/fr0ogi) |  |  |  |  |  |
 | 13 | АС-63 | 13 | 2 | Кухарчук Илья | KukharchukIlya | [dir](./students/KukharchukIlya) | [IlyaKukharchuk](https://github.com/IlyaKukharchuk) |  |  |  |  |  |

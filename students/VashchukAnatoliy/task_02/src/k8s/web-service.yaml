@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web01
+  namespace: app01
+  labels:
+    app: web01
+spec:
+  selector:
+    app: web01
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8081
+  type: ClusterIP

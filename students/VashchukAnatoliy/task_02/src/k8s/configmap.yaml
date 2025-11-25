@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web01-config
+  namespace: app01
+data:
+  PORT: "8081"
+  STU_ID: "1"
+  STU_GROUP: "feis"
+  STU_VARIANT: "v01"
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379"

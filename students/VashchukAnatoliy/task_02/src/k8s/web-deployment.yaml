@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web01
+  namespace: app01
+  labels:
+    app: web01
+    org.bstu.student.fullname: "Vashchuk_Anatoli_Valerevich"
+    org.bstu.student.id: "1"
+    org.bstu.group: "feis"
+    org.bstu.variant: "1"
+    org.bstu.course: RSIOT
+    org.bstu.owner: "skevet-avramuk"
+    org.bstu.student.slug: "feis-1-v01"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web01
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: web01
+    spec:
+      containers:
+        - name: web
+          image: web01:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081
+          envFrom:
+            - configMapRef:
+                name: web01-config
+            - secretRef:
+                name: web01-secret
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 30
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8081
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: "150m"
+              memory: "128Mi"
+            limits:
+              cpu: "300m"
+              memory: "256Mi"
