@@ -1,0 +1,46 @@
+---
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      args:
+        STU_ID: "220015"
+        STU_GROUP: "AS-63" 
+        STU_VARIANT: "11"
+    image: app-as-63-220015:stu-220015-v11
+    container_name: app-as-63-220015-v11
+    ports:
+      - "8073:8073"
+    environment:
+      - REDIS_HOST=redis
+      - STU_ID=220015
+      - STU_GROUP=AS-63
+      - STU_VARIANT=11
+      - APP_PORT=8073 
+    depends_on:
+      - redis
+    networks:
+      - net-as-63-220015-v11
+    labels:
+      - "org.bstu.owner=teenage717"
+      - "org.bstu.student.slug=as-63-220015-v11"
+    stop_grace_period: 30s
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis-as-63-220015-v11
+    volumes:
+      - data_v11:/data
+    networks:
+      - net-as-63-220015-v11
+    labels:
+      - "org.bstu.owner=teenage717"
+      - "org.bstu.student.slug=as-63-220015-v11"
+
+volumes:
+  data_v11:
+
+networks:
+  net-as-63-220015-v11:
