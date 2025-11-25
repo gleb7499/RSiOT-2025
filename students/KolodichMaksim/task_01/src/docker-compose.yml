@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: app:stu-220013-v09
+    container_name: app-as-63-220013-v09
+    environment:
+      - PORT=8071
+      - STU_ID=220013
+      - STU_GROUP=as-63
+      - STU_VARIANT=09
+      - REDIS_HOST=redis-as-63-220013-v09
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=
+    ports:
+      - "8071:8071"
+    labels:
+      - org.bstu.owner=proxladno
+      - org.bstu.student.slug=as-63-220013-v09
+    networks:
+      - net-as-63-220013-v09
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis-as-63-220013-v09
+    environment:
+      - REDIS_PASSWORD=
+    volumes:
+      - data_v9:/data
+    labels:
+      - org.bstu.owner=proxladno
+      - org.bstu.student.slug=as-63-220013-v09
+    networks:
+      - net-as-63-220013-v09
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  data_v9:
+
+networks:
+  net-as-63-220013-v09:
+    driver: bridge
