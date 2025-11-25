@@ -68,6 +68,26 @@
 
 slug = <группа>-<StudentID>-v<вариант> (пример, feis-41-12345-v07)
 
+<!-- START:criteria -->
+## Критерии оценивания (100 баллов)
+
+* Подготовка и корректность Kubernetes-манифестов (Deployment, Service, ConfigMap/Secret, PVC при необходимости) — 30
+* Настройка liveness/readiness probes и политика обновления (RollingUpdate) — 25
+* Корректность контейнеризации и образа (multi-stage, non-root, health endpoints, логирование) — 20
+* Инструкции для локального тестирования (Kind/Minikube), проверка статусов и smoke-tests — 15
+* Метаданные и именование (labels, аннотации, slug, ENV) и оформление README — 10
+
+<!-- END:criteria -->
+
+<!-- START:bonuses -->
+## Бонусы (+ до 10)
+
+* Использование Helm chart или Kustomize для управления манифестами.
+* Автоматизация локального разворачивания (скрипты/Makefile) и интеграция с CI.
+* Корректная настройка PersistentVolumeClaim и демонстрация работы с данными (если актуально для варианта).
+
+<!-- END:bonuses -->
+
 ### Требования к именованию
 
 * Kubernetes-ресурсы: префиксы в именах: app-<slug>, data-<slug>, net-<slug> — это облегчает поиск и очистку ресурсов.
