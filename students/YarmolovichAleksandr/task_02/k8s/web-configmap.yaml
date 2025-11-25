@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-config
+  namespace: app24
+data:
+  PORT: "8044"
+  STU_ID: "24"
+  STU_GROUP: "feis"
+  STU_VARIANT: "v24"
+  DB_HOST: "db"
+  DB_PORT: "5432"
+  DB_NAME: "appdb"

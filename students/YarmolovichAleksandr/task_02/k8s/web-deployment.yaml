@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web24
+  namespace: app24
+  labels:
+    app: web24
+    org.bstu.student.fullname: "yarmolovich_alexander_sergeevich"
+    org.bstu.student.id: "24"
+    org.bstu.group: "feis"
+    org.bstu.variant: "v24"
+    org.bstu.course: RSIOT
+    org.bstu.owner: "your-github-username"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web24
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: web24
+    spec:
+      containers:
+        - name: web
+          image: web24:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8044
+          env:
+            - name: PORT
+              value: "8044"
+            - name: STU_ID
+              value: "24"
+            - name: STU_GROUP
+              value: "feis"
+            - name: STU_VARIANT
+              value: "v24"
+            - name: DB_HOST
+              value: "db"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USER
+              value: "postgres"
+            - name: DB_PASSWORD
+              value: "postgres"
+            - name: DB_NAME
+              value: "appdb"
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8044
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8044
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "128Mi"
+            limits:
+              cpu: "300m"
+              memory: "256Mi"
