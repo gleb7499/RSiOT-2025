@@ -13,7 +13,7 @@ LABEL org.bstu.variant="20"
 LABEL org.bstu.course="RSIOT"
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl && \
+    apt-get install -y --no-install-recommends curl=* && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
 
