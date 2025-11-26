@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web20
+  namespace: app20
+  labels:
+    app: web20
+    org.bstu.student.fullname: "Stelmashuk_Ivan_Aleksandrovich"
+    org.bstu.student.id: "220025"
+    org.bstu.group: "AS-63"
+    org.bstu.variant: "20"
+    org.bstu.course: "RSIOT"
+    org.bstu.owner: "KulibinI"
+    org.bstu.student.slug: "as-63-220025-v20"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web20
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: web20
+    spec:
+      containers:
+        - name: web
+          image: kulibini/myapp:stu-220025-v20  # Замените на свой реестр/тег
+          ports:
+            - containerPort: 8054
+          env:
+            - name: FLASK_HOST
+              value: "0.0.0.0"
+            - name: FLASK_PORT
+              value: "8054"
+            - name: DB_HOST
+              value: "postgres-svc"  # Имя сервиса Postgres
+            - name: DB_NAME
+              value: "app_220025_v20"
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: username
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: password
+            - name: STU_ID
+              value: "220025"
+            - name: STU_GROUP
+              value: "АС-63"
+            - name: STU_VARIANT
+              value: "20"
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 8054
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 8054
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "400m"
+              memory: "512Mi"
+          volumeMounts:
+            - name: app-data
+              mountPath: /app/data
+      volumes:
+        - name: app-data
+          persistentVolumeClaim:
+            claimName: data-v20
