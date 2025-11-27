@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web11
+  namespace: app11
+  labels:
+    app: web11
+    org.bstu.student.fullname: "Kulikovich-Ivan-Sergeevich"
+    org.bstu.student.id: "220015"
+    org.bstu.group: "AS-63"
+    org.bstu.variant: "11"
+    org.bstu.course: "RSIOT"
+    org.bstu.owner: "teenage717"
+    org.bstu.student.slug: "as-63-220015-v11"
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: web11
+  template:
+    metadata:
+      labels:
+        app: web11
+    spec:
+      containers:
+      - name: app
+        image: app-as-63-220015:stu-220015-v11
+        ports:
+        - containerPort: 8073
+        env:
+        - name: STU_ID
+          value: "220015"
+        - name: STU_GROUP
+          value: "AS-63"
+        - name: STU_VARIANT
+          value: "11"
+        - name: APP_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: APP_PORT
+        - name: REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: REDIS_HOST
+        - name: REDIS_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: REDIS_PORT
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "150m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8073
+          initialDelaySeconds: 10
+          periodSeconds: 15
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8073
+          initialDelaySeconds: 5
+          periodSeconds: 10
