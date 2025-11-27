@@ -6,6 +6,8 @@ Behavior:
  - Uses the GitHub event payload (environment variable GITHUB_EVENT_PATH) to get PR author and changed files.
  - If any changed file is outside the allowed directory for the author, exit with code 2.
  - If author cannot be mapped, exit with code 3 (manual check required).
+ - If any changed file inside the student's directory is not inside a `task_*` folder,
+     exit with code 5 (only task folders are permitted).
 
 This script is intentionally small and dependency-free.
 """
@@ -124,6 +126,7 @@ def get_changed_files_from_event(event_or_pr):
         LOG.error('Invalid PR payload; expected dict, got %s', type(pr))
         return []
 
+    # fetch_changed_files_via_api now returns a list of dicts: {'filename': <path>, 'status': <status>}
     files = fetch_changed_files_via_api(pr)
     if files:
         LOG.info('Fetched %d changed files via GitHub API', len(files))
@@ -157,6 +160,9 @@ def fetch_changed_files_via_api(pr):
     if token:
         headers['Authorization'] = f'token {token}'
 
+    # Each entry will be a dict {'filename': <path>, 'status': <status>} where status is
+    # one of 'added', 'modified', 'removed', 'renamed', etc. We keep status so callers
+    # can make decisions (for example: ignore deletions of README.md).
     files = []
     next_url = f"{url}/files?per_page=100"
 
@@ -188,8 +194,10 @@ def fetch_changed_files_via_api(pr):
 
         for item in data:
             filename = item.get('filename')
-            if filename:
-                files.append(filename)
+            if not filename:
+                continue
+            status = item.get('status') or 'modified'
+            files.append({'filename': filename, 'status': status})
 
         next_url = _parse_next_link(link_header)
 
@@ -217,6 +225,31 @@ def collect_task_dirs(normalized_files, allowed_dir):
         if first_segment.startswith('task_'):
             tasks.add(first_segment)
     return tasks
+
+
+def find_non_task_files(normalized_files, allowed_dir):
+    """Return a list of files that are inside the student's directory but not within a task_* folder.
+
+    Example:
+      allowed_dir = 'students/JohnDoe'
+      'students/JohnDoe/README.md' -> non-task (violation)
+      'students/JohnDoe/task_01/index.html' -> ok
+    """
+    if not allowed_dir:
+        return []
+    prefix = allowed_dir.rstrip('/') + '/'
+    violations = []
+    for nf in normalized_files:
+        if nf.startswith(prefix):
+            rel = nf[len(prefix):]
+            # skip empty rel (shouldn't happen for files)
+            if not rel:
+                continue
+            # if the first segment is not task_*, flag it
+            first_segment = rel.split('/', 1)[0]
+            if not first_segment.startswith('task_'):
+                violations.append(nf)
+    return violations
 
 
 def main():
@@ -303,7 +336,22 @@ def main():
     normalized_files = []
     allowed_prefix = allowed.rstrip('/') + '/'
     for f in changed_files:
-        nf = normalize_path(f)
+        # changed_files may contain dicts with filename and status (from GitHub API)
+        if isinstance(f, dict):
+            filename = f.get('filename')
+            status = (f.get('status') or '').lower()
+        else:
+            filename = f
+            status = ''
+
+        nf = normalize_path(filename)
+
+        # Allow deletion of the student's README.md without flagging as "outside allowed dir".
+        # This ignores changes where status == 'removed' and path matches students/<name>/README.md
+        if status == 'removed' and nf.startswith('students/') and nf.endswith('/README.md'):
+            LOG.info('Ignoring removed README file: %s', nf)
+            continue
+
         normalized_files.append(nf)
         in_dir = nf == allowed or nf.startswith(allowed_prefix)
         if not in_dir:
@@ -319,6 +367,17 @@ def main():
         json.dump(result, open(CHECK_RESULT_PATH, 'w', encoding='utf-8'), ensure_ascii=False)
         LOG.error('Validation failed, violations: %s', violations)
         sys.exit(2)
+
+    # Enforce that any files within the student's directory are placed inside task_* folders
+    non_task = find_non_task_files(normalized_files, allowed)
+    if non_task:
+        print('Detected files in student directory that are not inside a task_* folder:')
+        for v in non_task:
+            print(' -', v)
+        result.update({'exit_code': 5, 'message': 'non-task files modified in student directory', 'non_task_files': non_task})
+        json.dump(result, open(CHECK_RESULT_PATH, 'w', encoding='utf-8'), ensure_ascii=False)
+        LOG.error('Validation failed, non-task files inside %s: %s', allowed, non_task)
+        sys.exit(5)
 
     tasks = collect_task_dirs(normalized_files, allowed)
     if len(tasks) > 1:

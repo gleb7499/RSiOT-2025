@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: app01
+  labels:
+    org.bstu.course: RSIOT
+    org.bstu.variant: "1"

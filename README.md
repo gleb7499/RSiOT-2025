@@ -74,7 +74,7 @@
 | 21 | АС-63 | 21 | 2 | Тунчик Антон | TunchikAnton | [dir](./students/TunchikAnton) | [Stis25](https://github.com/Stis25) |  |  |  |  |  |
 | 22 | АС-63 | 22 | 2 | Филипчук Дмитрий | FilipchukDmitriy | [dir](./students/FilipchukDmitriy) | [kuddel11](https://github.com/kuddel11) |  |  |  |  |  |
 | 23 | АС-63 | 23 | 2 | Ярмола Александр | YarmolaAleksandr | [dir](./students/YarmolaAleksandr) | [alexsandro007](https://github.com/alexsandro007) |  |  |  |  |  |
-| 24 | АС-63 | 24 | 2 | Ярмолович Александр | YarmolovichAleksandr | [dir](./students/YarmolovichAleksandr) | [yarmolov](https://github.com/yarmolov) |  |  |  |  |  |
+| 24 | АС-63 | 24 | 2 | Ярмолович Александр | YarmolovichAleksandr | [dir](./students/YarmolovichAleksandr) | [yarmolov](https://github.com/yarmolov) | 100+10 | 92 |  |  |  |
 | 25 | АС-64 | 1 | 1 | Белаш Александр | BelashAleksandr | [dir](./students/BelashAleksandr) | [went2smoke](https://github.com/went2smoke) |  |  |  |  |  |
 | 26 | АС-64 | 2 | 1 | Брызгалов Юрий | BryzgalovYuriy | [dir](./students/BryzgalovYuriy) | [Gena-Cidarmyan](https://github.com/Gena-Cidarmyan) |  |  |  |  |  |
 | 27 | АС-64 | 3 | 1 | Будник Анна | BudnikAnna | [dir](./students/BudnikAnna) | [annettebb](https://github.com/annettebb) |  |  |  |  |  |
