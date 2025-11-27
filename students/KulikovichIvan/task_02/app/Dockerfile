@@ -7,7 +7,7 @@ RUN pip install --user --no-cache-dir -r requirements.txt
 FROM python:3.11-alpine
 
 RUN adduser -D appuser && \
-    apk add --no-cache curl
+    apk add --no-cache curl=8.14.1-r2
 
 WORKDIR /app
 

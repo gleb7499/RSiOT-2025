@@ -52,17 +52,15 @@ Resource Limits: CPU 150m, Memory 128Mi
 
 Установленный Minikube
 
-1. Сборка Docker образа
+1. Сборка Docker образа:
 docker build -t app-as-63-220015:stu-220015-v11 .
-2. Запуск Minikube кластера
-bash
+2. Запуск Minikube кластера:
 minikube start --driver=docker
 minikube addons enable ingress
-3. Загрузка образа в Minikube
+3. Загрузка образа в Minikube:
 minikube image load app-as-63-220015:stu-220015-v11
-4. Деплой в Kubernetes
+4. Деплой в Kubernetes:
 kubectl apply -f k8s/
-5. Проверка деплоя
 
 ## Проверки
 
@@ -118,11 +116,14 @@ kubectl -n app11 logs -l app=web11
 
 ### Увеличим количество реплик
 
-kubectl -n app11 scale deployment web11 --replicas=4
+kubectl -n app11 scale deployment web11 --replicas=6
 
 Проверим что изменилось:
+
 kubectl -n app11 get pods
-Добавились две реплики
+
+Добавились две реплики:
+
 ![replicas](./imgs/scale.png)
 
 ### Liveness/Readiness probes (health check)
