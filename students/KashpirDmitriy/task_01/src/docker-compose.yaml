@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    image: kashpir/lab01-v34:stu-220043-v34
+    container_name: app-as64-220043-v34
+    environment:
+      PORT: 8012
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: app_220043_v34
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: secretpass
+      STU_ID: "220043"
+      STU_GROUP: "АС-64"
+      STU_VARIANT: "34"
+    ports:
+      - "8012:8012"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - data_v34:/data
+    labels:
+      org.bstu.owner: "Dima-kashpir"
+      org.bstu.student.slug: "as64-220043-v34"
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres-as64-220043-v34
+    environment:
+      POSTGRES_DB: app_220043_v34
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: secretpass
+    volumes:
+      - data_v34:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U appuser -d app_220043_v34"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      org.bstu.owner: "Dima-kashpir"
+      org.bstu.student.slug: "it41-220043-v34"
+
+volumes:
+  data_v34:
+
+networks:
+  default:
+    name: net-it41-220043-v34
