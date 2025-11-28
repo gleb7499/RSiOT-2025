@@ -1,11 +1,11 @@
 version: "3.9"
 
 x-env: &student_env
-  STU_ID: "${STU_ID}"
-  STU_GROUP: "${STU_GROUP}"
+  STU_ID: "220026"
+  STU_GROUP: "AC-63"
   STU_VARIANT: "21"
-  GITHUB_USERNAME: "${GITHUB_USERNAME}"
-  STUDENT_FULLNAME: "${STUDENT_FULLNAME}"
+  GITHUB_USERNAME: "Stis25"
+  STUDENT_FULLNAME: "Tunchik Anton Dmitrievich"
 
 services:
   app:
