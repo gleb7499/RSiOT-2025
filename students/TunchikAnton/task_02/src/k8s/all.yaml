@@ -1,0 +1,261 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: app21
+  labels:
+    org.bstu.course: "RSIOT"
+    org.bstu.owner: "Stis25"
+    org.bstu.student.slug: "AS-63-220026-v21"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web21-config
+  namespace: app21
+  labels:
+    org.bstu.student.fullname: "Tunchik Anton Dmitrievich"
+    org.bstu.student.id: "220026"
+    org.bstu.group: "AS-63"
+    org.bstu.variant: "21"
+    org.bstu.course: "RSIOT"
+    org.bstu.owner: "Stis25"
+    org.bstu.student.slug: "AS-63-220026-v21"
+data:
+  PORT: "8041"
+  STU_VARIANT: "21"
+  STU_GROUP: "AS-63"
+  REDIS_ADDR: "redis:6379"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: web21-secret
+  namespace: app21
+  labels:
+    org.bstu.student.fullname: "Tunchik Anton Dmitrievich"
+    org.bstu.student.id: "220026"
+    org.bstu.group: "AS-63"
+    org.bstu.variant: "21"
+    org.bstu.course: "RSIOT"
+    org.bstu.owner: "Stis25"
+type: Opaque
+stringData:
+  STU_ID: "220026"
+  GITHUB_USERNAME: "Stis25"
+  STUDENT_FULLNAME: "Tunchik Anton Dmitrievich"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: app21
+  labels:
+    app: redis
+    org.bstu.student.slug: "AS-63-220026-v21"
+    org.bstu.course: "RSIOT"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:7-alpine
+        command: ["redis-server", "--appendonly", "yes"]
+        ports:
+        - containerPort: 6379
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        livenessProbe:
+          exec:
+            command: ["redis-cli", "ping"]
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        readinessProbe:
+          exec:
+            command: ["redis-cli", "ping"]
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+      volumes:
+      - name: redis-data
+        persistentVolumeClaim:
+          claimName: redis-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: app21
+  labels:
+    app: redis
+    org.bstu.course: "RSIOT"
+spec:
+  selector:
+    app: redis
+  ports:
+  - port: 6379
+    targetPort: 6379
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-pvc
+  namespace: app21
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web21
+  namespace: app21
+  labels:
+    app: web21
+    org.bstu.student.fullname: "Tunchik Anton Dmitrievich"
+    org.bstu.student.id: "220026"
+    org.bstu.group: "AS-63"
+    org.bstu.variant: "21"
+    org.bstu.course: "RSIOT"
+    org.bstu.owner: "Stis25"
+    org.bstu.student.slug: "AC-63-220026-v21"
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: web21
+  template:
+    metadata:
+      labels:
+        app: web21
+    spec:
+      containers:
+      - name: web21
+        image: rsiot-app:stu-220026-v21
+        ports:
+        - containerPort: 8041
+        env:
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: web21-config
+              key: PORT
+        - name: STU_VARIANT
+          valueFrom:
+            configMapKeyRef:
+              name: web21-config
+              key: STU_VARIANT
+        - name: STU_GROUP
+          valueFrom:
+            configMapKeyRef:
+              name: web21-config
+              key: STU_GROUP
+        - name: REDIS_ADDR
+          valueFrom:
+            configMapKeyRef:
+              name: web21-config
+              key: REDIS_ADDR
+        - name: STU_ID
+          valueFrom:
+            secretKeyRef:
+              name: web21-secret
+              key: STU_ID
+        - name: GITHUB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: web21-secret
+              key: GITHUB_USERNAME
+        - name: STUDENT_FULLNAME
+          valueFrom:
+            secretKeyRef:
+              name: web21-secret
+              key: STUDENT_FULLNAME
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "75m"
+          limits:
+            memory: "128Mi"
+            cpu: "150m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8041
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 2
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8041
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 2
+          failureThreshold: 2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web21
+  namespace: app21
+  labels:
+    app: web21
+    org.bstu.student.fullname: "Tunchik Anton Dmitrievich"
+    org.bstu.student.id: "220026"
+    org.bstu.group: "AS-63"
+    org.bstu.variant: "21"
+    org.bstu.course: "RSIOT"
+    org.bstu.owner: "Stis25"
+spec:
+  selector:
+    app: web21
+  ports:
+  - port: 8041
+    targetPort: 8041
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web21-ingress
+  namespace: app21
+  labels:
+    app: web21
+    org.bstu.course: "RSIOT"
+    org.bstu.owner: "Stis25"
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web21
+            port:
+              number: 8041

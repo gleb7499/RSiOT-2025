@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: app21
+  labels:
+    org.bstu.course: "RSIOT"
+    org.bstu.owner: "Stis25"
+    org.bstu.student.slug: "AS-63-220026-v21"

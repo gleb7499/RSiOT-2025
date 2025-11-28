@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web21-config
+  namespace: app21
+  labels:
+    org.bstu.student.fullname: "Tunchik Anton Dmitrievich"
+    org.bstu.student.id: "220026"
+    org.bstu.group: "AS-63"
+    org.bstu.variant: "21"
+    org.bstu.course: "RSIOT"
+    org.bstu.owner: "Stis25"
+    org.bstu.student.slug: "AS-63-220026-v21"
+data:
+  PORT: "8041"
+  STU_VARIANT: "21"
+  STU_GROUP: "AS-63"
+  REDIS_ADDR: "redis:6379"
