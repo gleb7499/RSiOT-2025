@@ -14,11 +14,14 @@
 
 ## Шаги сборки и запуска
 
-1. Прописываем в консоли docker compose up -d --build
-2. Прописываем к консоли docker compose up -d
+Выполните команды:
+   ```bash
+   docker compose up -d --build
+   docker compose up -d
+   ```
 
 ## Логи
-
+```markdown
 Starting Flask application on 0.0.0.0:8094...
  * Serving Flask app 'app'
  * Debug mode: off
@@ -28,3 +31,4 @@ Running on http://127.0.0.1:8094⁠
 172.18.0.1 - - [27/Nov/2025 15:23:12] "GET /live HTTP/1.1" 200 -
 Received signal 15, initiating graceful shutdown...
 Shutdown complete
+```
