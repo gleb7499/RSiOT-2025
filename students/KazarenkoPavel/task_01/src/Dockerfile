@@ -12,7 +12,7 @@ FROM python:3.11-slim
 
 RUN adduser -D -u 10001 webuser && \
     apt-get update && \
-    apt-get install -y --no-install-recommends wget && \
+    apt-get install -y --no-install-recommends wget=1.21.4-1+deb12u1 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
