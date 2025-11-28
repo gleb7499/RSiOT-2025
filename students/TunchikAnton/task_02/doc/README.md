@@ -69,7 +69,7 @@ kubectl port-forward -n app21 service/web21-service 8080:8041
 - `GET /` - информация о сервисе и студенте
 - `GET /health` - проверка работоспособности Redis (совместимость с ЛР01)
 - `GET /live` - **liveness probe** для Kubernetes
-- `GET /ready` - **readiness probe** для Kubernetes  
+- `GET /ready` - **readiness probe** для Kubernetes
 - `GET /hit` - увеличение счетчика в Redis
 - `GET /metrics` - метрики приложения для мониторинга
 
