@@ -36,13 +36,16 @@ anton-lab-1/
 
 ## Быстрый запуск
 
-### Локально с Docker Compose:
+### Локально с Docker Compose
+
 ```bash
 docker compose up --build
 ```
+
 Сервер доступен: `http://localhost:8041`
 
-### В Kubernetes с Kind:
+### В Kubernetes с Kind
+
 ```bash
 # Создать кластер
 kind create cluster --name app21-cluster
@@ -72,18 +75,21 @@ kubectl port-forward -n app21 service/web21-service 8080:8041
 
 ## Конфигурация Kubernetes
 
-### Deployment:
+### Deployment
+
 - **Replicas:** 2
 - **Strategy:** RollingUpdate (maxSurge: 1, maxUnavailable: 0)
 - **Resources:** requests: 100m CPU/64Mi RAM, limits: 150m CPU/128Mi RAM
 - **Liveness probe:** `/live` (interval: 10s, timeout: 5s)
 - **Readiness probe:** `/ready` (interval: 5s, timeout: 3s)
 
-### Service:
+### Service
+
 - **Type:** NodePort (port: 8041, nodePort: 30081)
 - **Namespace:** app21
 
-### ConfigMap:
+### ConfigMap
+
 - Конфигурация порта, студенческих данных, Redis адреса
 
 ## Особенности реализации
