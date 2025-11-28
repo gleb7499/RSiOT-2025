@@ -17,22 +17,22 @@ LABEL org.bstu.student.fullname="Иванюк Иван Александрови�
       org.bstu.course="RSIOT"
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl && \
+    apt-get install -y --no-install-recommends curl=8.5.0-* && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
+
+RUN groupadd -r appuser && useradd -r -g appuser appuser && \
+    chown -R appuser:appuser /app
 
 COPY --from=builder /install /usr/local
 
 COPY app.py .
-
-RUN groupadd -r appuser && useradd -r -g appuser appuser && \
-    chown -R appuser:appuser /app
 
 USER appuser
 
 EXPOSE 8094
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
-    CMD ["/usr/bin/curl", "-fss", "http://localhost:8094/live"]
+    CMD curl -f http://localhost:8094/live || exit 1
 
 CMD ["python", "app.py"]
