@@ -25,7 +25,7 @@ LABEL org.bstu.student.fullname="Козловская Анна Геннадье�
 ENV STU_ID=220012 \
   STU_GROUP=АС-63 \
   STU_VARIANT=8 \
-  APP_PORT=8060 \
+  APP_PORT=8094 \
   APP_HOST=0.0.0.0 \
   PYTHONDONTWRITEBYTECODE=1 \
   PYTHONUNBUFFERED=1
@@ -38,7 +38,7 @@ COPY --from=builder /install /usr/local
 
 COPY src/app.py ./
 
-EXPOSE 8060
+EXPOSE 8094
 
 # Устанавливаем wget с фиксацией версии (совместимой с Alpine 3.22) и настраиваем nsswitch
 RUN apk add --no-cache wget=1.25.0-r1 \

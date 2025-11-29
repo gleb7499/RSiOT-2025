@@ -12,7 +12,7 @@ ENV_STU_ID = os.getenv("STU_ID", "220012")
 ENV_STU_GROUP = os.getenv("STU_GROUP", "АС-63")
 ENV_STU_VARIANT = os.getenv("STU_VARIANT", "8")
 
-PORT = int(os.getenv("APP_PORT", "8060"))
+PORT = int(os.getenv("APP_PORT", "8094"))
 HOST = os.getenv("APP_HOST", "0.0.0.0")
 
 app = Flask(__name__)

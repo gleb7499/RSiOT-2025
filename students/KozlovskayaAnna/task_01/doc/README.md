@@ -52,7 +52,7 @@
 
 **Конфигурация:**
 
-- **Порт приложения:** 8060
+- **Порт приложения:** 8094
 - **Порт БД:** 5432 (внутри Docker сети)
 - **Система именования (slug):** as63-220012-v8
 - **Тег образа:** annkrq/lab1-v8:stu-220012-v8
@@ -123,7 +123,7 @@ task_01/
 - Копирование только установленных пакетов из builder stage
 - Создание непривилегированного пользователя (UID 10001)
 - Копирование исходного кода приложения
-- EXPOSE 8060
+- EXPOSE 8094
 - HEALTHCHECK с проверкой /healthz эндпоинта
 - USER 10001 (запуск от непривилегированного пользователя)
 - ENTRYPOINT в exec-форме для корректной обработки сигналов
@@ -167,8 +167,8 @@ task_01/
 - Сборка из Dockerfile с тегом annkrq/lab1-v8:stu-220012-v8
 - Имя контейнера: app-as63-220012-v8
 - Зависимость от db с условием service_healthy
-- Порты: 8060:8060
-- ENV: STU_ID=220012, STU_GROUP=АС-63, STU_VARIANT=8, APP_PORT=8060
+- Порты: 8094:8094
+- ENV: STU_ID=220012, STU_GROUP=АС-63, STU_VARIANT=8, APP_PORT=8094
 - DATABASE_URL: postgresql://app_user:app_pass@db:5432/app_220012_v8
 - Labels: org.bstu.owner=annkrq, org.bstu.student.slug=as63-220012-v8
 - Security: read_only=true, tmpfs для /tmp
@@ -294,7 +294,7 @@ COPY src/app.py ./
 
 - SLUG=as63-220012-v8
 - IMAGE=annkrq/lab1-v8:stu-220012-v8
-- PORT=8060
+- PORT=8094
 - COMPOSE_PROJECT_NAME для корректной работы на Windows
 
 `скриншот make help`
@@ -347,7 +347,7 @@ make health
 - [✅] Multi-stage сборка Dockerfile
 - [✅] Размер финального образа ≤ 150MB
 - [✅] Непривилегированный пользователь (USER 10001)
-- [✅] EXPOSE 8060 корректно настроен
+- [✅] EXPOSE 8094 корректно настроен
 - [✅] HEALTHCHECK реализован и работает
 - [✅] LABELS с метаданными студента
 

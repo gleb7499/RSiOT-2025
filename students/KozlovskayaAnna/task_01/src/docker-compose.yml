@@ -40,14 +40,14 @@ services:
       STU_ID: "220012"
       STU_GROUP: "АС-63"
       STU_VARIANT: "8"
-      APP_PORT: "8060"
+      APP_PORT: "8094"
       APP_HOST: "0.0.0.0"
       DATABASE_URL: postgresql://app_user:app_pass@db:5432/app_220012_v8
     depends_on:
       db:
         condition: service_healthy
     ports:
-      - "8060:8060"
+      - "8094:8094"
     networks:
       - net-as63-220012-v8
     labels:
