@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    image: flask-app:stu-220051-v38
+    container_name: app-as64-220051-v38
+    ports:
+      - "8002:8002"
+    environment:
+      - STU_ID=220051
+      - STU_GROUP=АС-64
+      - STU_VARIANT=38
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=app_220051_v38
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+    depends_on:
+      - db
+    networks:
+      - net-as64-220051-v38
+    labels:
+      org.bstu.owner: "LexusxdsD"
+      org.bstu.student.slug: "as64-220051-v38"
+
+  db:
+    image: postgres:15-alpine
+    container_name: db-as64-220051-v38
+    environment:
+      - POSTGRES_DB=app_220051_v38
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - data_v38:/var/lib/postgresql/data
+    networks:
+      - net-as64-220051-v38
+    labels:
+      org.bstu.owner: "LexusxdsD"
+      org.bstu.student.slug: "as64-220051-v38"
+
+volumes:
+  data_v38:
+    name: data_v38
+
+networks:
+  net-as64-220051-v38:
+    name: net-as64-220051-v38
