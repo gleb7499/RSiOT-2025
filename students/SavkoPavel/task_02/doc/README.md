@@ -71,6 +71,7 @@ kubectl cluster-info
 kubectl get nodes
 
 #### Установка Ingress контроллера
+
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml
 kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s
 
@@ -122,12 +123,12 @@ curl http://localhost:8052/
 | Multi-stage Docker build | ✅ | Образ 29.4 MB|
 | Размер образа ≤ 150 MB | ✅ | 29.4 MB < 150 MB|
 | Non-root пользователь | ✅ | UID: 10001|
-| Resource limits |	✅ |	CPU=200m, Memory=192Mi|
+| Resource limits | ✅ | CPU=200m, Memory=192Mi|
 | Health endpoints | ✅ | /live возвращает ok |
 | Liveness/Readiness probes | ✅ | Настроены в deployment|
 | Graceful shutdown | ✅ | Обработка SIGTERM/SIGINT|
 | 3 реплики | ✅ | Deployment с 3 подами|
-| RollingUpdate стратегия |	✅ |	Настроена в deployment|
+| RollingUpdate стратегия | ✅ | Настроена в deployment|
 | ConfigMap/Secret | ✅ | Разделение конфигурации|
 | Service (ClusterIP) | ✅ | Сервис создан и работает|
 | Ingress с nginx | ✅ | Ingress настроен|
