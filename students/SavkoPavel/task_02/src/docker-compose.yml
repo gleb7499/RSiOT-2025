@@ -1,0 +1,59 @@
+x-stu: &stu
+  owner: "1nsirius"
+  slug: "АС-63-220023-v18"
+
+services:
+  app:
+    image: ghcr.io/1nsirius/rsiot-app:stu-220023-v18
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: "app-as-63-220023-v18"
+    environment:
+      HOST: "0.0.0.0"
+      PORT: "8052"
+      STU_ID: "220023"
+      STU_GROUP: "АС-63"
+      STU_VARIANT: "18"
+      PGHOST: "db"
+      PGPORT: "5432"
+      PGUSER: "stuuser"
+      PGPASSWORD: "stupass"
+      PGDATABASE: "app_220023-v18"
+      PGSSLMODE: "disable"
+    depends_on:
+      - db
+    ports:
+      - "8052:8052"
+    networks:
+      - "net-as-63-220023-v18"
+    labels:
+      org.bstu.owner: "1nsirius"
+      org.bstu.student.slug: "АС-63-220023-v18"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8052/live" ]
+      interval: 10s
+      timeout: 2s
+      retries: 5
+      start_period: 5s
+
+  db:
+    image: postgres:16-alpine
+    container_name: "db-as-63-220023-v18"
+    environment:
+      POSTGRES_DB: "app_220023-v18"
+      POSTGRES_USER: "stuuser"
+      POSTGRES_PASSWORD: "stupass"
+    volumes:
+      - "data-as-63-220023-v18:/var/lib/postgresql/data"
+    networks:
+      - "net-as-63-220023-v18"
+    labels:
+      org.bstu.owner: "1nsirius"
+      org.bstu.student.slug: "ас-63-220023-v18"
+
+volumes:
+  data-as-63-220023-v18:
+
+networks:
+  net-as-63-220023-v18: {}
