@@ -1,0 +1,16 @@
+{
+  "name": "rsiot-lab01",
+  "version": "1.0.0",
+  "description": "Simple Node/Express service with Redis",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "Belash Aleksandr",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "redis": "^4.6.5"
+  }
+}
