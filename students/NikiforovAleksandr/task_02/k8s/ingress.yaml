@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web16-ingress
+  namespace: app16
+  labels:
+    app: web16
+    org.bstu.student.fullname: "Nikiforov-Alexandr"
+    org.bstu.student.id: "220020"
+    org.bstu.group: "AS-63"
+    org.bstu.variant: "16"
+    org.bstu.course: "RSIOT"
+    org.bstu.owner: "woqhy"
+    org.bstu.student.slug: "as-63-220020-v16"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: web16.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web16-service
+            port:
+              number: 8064
