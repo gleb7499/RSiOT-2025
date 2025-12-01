@@ -41,7 +41,7 @@
 
 ---
 
-## Ход выполнения работы
+### Ход выполнения работы
 
 ### 1. Структура проекта
 
@@ -61,10 +61,12 @@
 ### 2. Последовательность запуска
 
 #### Проверка версий
+
 docker --version
 kubectl version --client
 
 #### Проверка кластера Kubernetes
+
 kubectl cluster-info
 kubectl get nodes
 
@@ -91,6 +93,7 @@ kubectl apply -f k8s\service.yaml
 kubectl apply -f k8s\ingress.yaml
 
 #### Проверка создания ресурсов
+
 kubectl get all -n app18
 kubectl get configmap,secret,ingress -n app18
 
@@ -98,15 +101,17 @@ kubectl get configmap,secret,ingress -n app18
 
 ### 5. Тестирование приложения
 
-# Port-forward для локального доступа
+#### Port-forward для локального доступа
+
 kubectl port-forward -n app18 svc/web18-service 8052:8052 &
 
-# Тестирование endpoints
+#### Тестирование endpoints
+
 curl http://localhost:8052/live
-# Ответ: ok
+Ответ: ok
 
 curl http://localhost:8052/
-# Ответ: JSON с информацией о сервисе
+Ответ: JSON с информацией о сервисе
 
 ---
 
@@ -114,19 +119,19 @@ curl http://localhost:8052/
 
 | Критерий | Выполнено | Комментарий |
 |-----------|-----------|--------------|
-| Multi-stage Docker build |	✅ |	Образ 29.4 MB|
-| Размер образа ≤ 150 MB |	✅ |	29.4 MB < 150 MB|
-| Non-root пользователь |	✅ |	UID: 10001|
+| Multi-stage Docker build | ✅ | Образ 29.4 MB|
+| Размер образа ≤ 150 MB | ✅ | 29.4 MB < 150 MB|
+| Non-root пользователь | ✅ | UID: 10001|
 | Resource limits |	✅ |	CPU=200m, Memory=192Mi|
-| Health endpoints |	✅ |	/live возвращает ok |
-| Liveness/Readiness probes |	✅ |	Настроены в deployment|
-| Graceful shutdown |	✅ |	Обработка SIGTERM/SIGINT|
-| 3 реплики |	✅ |	Deployment с 3 подами|
+| Health endpoints | ✅ | /live возвращает ok |
+| Liveness/Readiness probes | ✅ | Настроены в deployment|
+| Graceful shutdown | ✅ | Обработка SIGTERM/SIGINT|
+| 3 реплики | ✅ | Deployment с 3 подами|
 | RollingUpdate стратегия |	✅ |	Настроена в deployment|
-| ConfigMap/Secret |	✅ |	Разделение конфигурации|
-| Service (ClusterIP) |	✅ |	Сервис создан и работает|
-| Ingress с nginx |	✅ |	Ingress настроен|
-| Метаданные студента |	✅ |	Все labels присутствуют|
+| ConfigMap/Secret | ✅ | Разделение конфигурации|
+| Service (ClusterIP) | ✅ | Сервис создан и работает|
+| Ingress с nginx | ✅ | Ingress настроен|
+| Метаданные студента | ✅ | Все labels присутствуют|
 
 ---
 

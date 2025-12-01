@@ -23,7 +23,7 @@ COPY src/ ./src/
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /main ./src
 
 # Runtime stage
-FROM alpine:latest
+FROM alpine:3.19
 
 # Metadata
 LABEL org.bstu.student.fullname="Савко Павел Станиславович" \
@@ -32,19 +32,24 @@ LABEL org.bstu.student.fullname="Савко Павел Станиславови�
       org.bstu.variant="18" \
       org.bstu.course="RSIOT"
 
-# Install CA certificates
-RUN apk --no-cache add ca-certificates tzdata
+# Install CA certificates and tzdata with pinned versions
+RUN apk --no-cache add \
+    ca-certificates=20230506-r0 \
+    tzdata=2023d-r1 \
+    && rm -rf /var/cache/apk/*
 
-# Create non-root user
-RUN adduser -D -u 10001 appuser
-
-# Switch to non-root user
-USER appuser
+# Create non-root user and set up working directory in one RUN
+RUN adduser -D -u 10001 appuser \
+    && mkdir -p /home/appuser \
+    && chown -R appuser:appuser /home/appuser
 
 WORKDIR /home/appuser
 
 # Copy binary from builder
-COPY --from=builder /main ./app
+COPY --from=builder --chown=appuser:appuser /main ./app
+
+# Switch to non-root user
+USER appuser
 
 # Expose port
 EXPOSE 8052
