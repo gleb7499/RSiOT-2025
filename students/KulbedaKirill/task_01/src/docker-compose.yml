@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: task01-app:stu-220016-v12
+    container_name: app-as63-220016-v12
+    ports:
+      - "8074:8074"
+    environment:
+      - STU_ID=220016
+      - STU_GROUP=АС-63
+      - STU_VARIANT=12
+      - APP_PORT=8074
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=appuser
+      - DB_PASSWORD=apppass123
+      - DB_NAME=app_220016_v12
+    depends_on:
+      - postgres
+    networks:
+      - net-as63-220016-v12
+    labels:
+      - "org.bstu.owner=fr0ogi"
+      - "org.bstu.student.slug=as63-220016-v12"
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres-as63-220016-v12
+    environment:
+      - POSTGRES_USER=appuser
+      - POSTGRES_PASSWORD=apppass123
+      - POSTGRES_DB=app_220016_v12
+    volumes:
+      - data-as63-220016-v12:/var/lib/postgresql/data
+    networks:
+      - net-as63-220016-v12
+    labels:
+      - "org.bstu.owner=fr0ogi"
+      - "org.bstu.student.slug=as63-220016-v12"
+
+volumes:
+  data-as63-220016-v12:
+    name: data-as63-220016-v12
+
+networks:
+  net-as63-220016-v12:
+    name: net-as63-220016-v12
