@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: app11
+  labels:
+    org.bstu.student.fullname: "Kulikovich-Ivan-Sergeevich"
+    org.bstu.student.id: "220015"
+    org.bstu.group: "AS-63"
+    org.bstu.variant: "11"
+    org.bstu.course: "RSIOT"
+    org.bstu.owner: "teenage717"
+    org.bstu.student.slug: "as-63-220015-v11"

@@ -1,0 +1,17 @@
+cat > .dockerignore << EOF
+**/__pycache__
+**/*.pyc
+**/.git
+**/.dockerignore
+**/Dockerfile
+**/README.md
+**/.gitignore
+**/test*
+**/*.log
+.git
+.cache
+*.dockerignore
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+EOF
