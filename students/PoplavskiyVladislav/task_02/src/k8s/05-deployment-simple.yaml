@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web17
+  namespace: app17
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web17
+  template:
+    metadata:
+      labels:
+        app: web17
+    spec:
+      containers:
+      - name: web17-app
+        image: app:stu-220021-v17
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8051
+        env:
+        - name: STU_ID
+          value: "220021"
+        - name: STU_GROUP
+          value: "ASOI 63"
+        - name: STU_VARIANT
+          value: "17"
+        - name: PORT
+          value: "8051"
+        - name: REDIS_HOST
+          value: "web17-redis"
+        - name: REDIS_PORT
+          value: "6379"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "75m"
+          limits:
+            memory: "128Mi"
+            cpu: "150m"
+        livenessProbe:
+          httpGet:
+            path: /ready
+            port: 8051
+          initialDelaySeconds: 10
+          periodSeconds: 15
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8051
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+
+

@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: rsiot-v37:stu-220050-v37
+    container_name: app-as64-220050-v37
+    ports:
+      - "8001:8001"
+    environment:
+      - PORT=8001
+      - STU_ID=220050
+      - STU_GROUP=АС-64
+      - STU_VARIANT=37
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    networks:
+      - net-as64-220050-v37
+    labels:
+      org.bstu.owner: "goryachiy-ugolek"
+      org.bstu.student.slug: "as64-220050-v37"
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis-as64-220050-v37
+    volumes:
+      - data-as64-220050-v37:/data
+    networks:
+      - net-as64-220050-v37
+    labels:
+      org.bstu.owner: "goryachiy-ugolek"
+      org.bstu.student.slug: "as64-220050-v37"
+
+volumes:
+  data-as64-220050-v37:
+
+networks:
+  net-as64-220050-v37:
+    driver: bridge

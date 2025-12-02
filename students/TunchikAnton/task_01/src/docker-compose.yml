@@ -1,0 +1,68 @@
+version: "3.9"
+
+x-env: &student_env
+  STU_ID: "220026"
+  STU_GROUP: "AC-63"
+  STU_VARIANT: "21"
+  GITHUB_USERNAME: "Stis25"
+  STUDENT_FULLNAME: "Tunchik Anton Dmitrievich"
+
+services:
+  app:
+    build:
+      context: .
+      args:
+        BSTU_FULLNAME: "${STUDENT_FULLNAME}"
+        BSTU_STUDENT_ID: "${STU_ID}"
+        BSTU_GROUP: "${STU_GROUP}"
+        BSTU_VARIANT: "21"
+        BSTU_COURSE: "RSIOT"
+    image: "${IMAGE_NAME:-rsiot-app:stu-${STU_ID}-v21}"
+    container_name: "app-${SLUG}"
+    environment:
+      <<: *student_env
+      PORT: "8041"
+      REDIS_ADDR: "redis:6379"
+    ports:
+      - "8041:8041"
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8041/health"]
+      interval: 15s
+      timeout: 2s
+      retries: 3
+      start_period: 10s
+    labels:
+      org.bstu.owner: "${GITHUB_USERNAME}"
+      org.bstu.student.slug: "${SLUG}"
+    networks:
+      - appnet
+
+  redis:
+    image: redis:7-alpine
+    container_name: "redis-${SLUG}"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - data_v21:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 2s
+      retries: 10
+      start_period: 5s
+    labels:
+      org.bstu.owner: "${GITHUB_USERNAME}"
+      org.bstu.student.slug: "${SLUG}"
+    networks:
+      - appnet
+
+volumes:
+  data_v21:
+    name: "data_v21-${SLUG}"
+
+networks:
+  appnet:
+    name: "net-${SLUG}"
+    driver: bridge
