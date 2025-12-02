@@ -1,0 +1,13 @@
+﻿apiVersion: v1
+kind: Service
+metadata:
+  name: web17-service
+  namespace: app17
+spec:
+  selector:
+    app: web17
+  ports:
+  - port: 8051
+    targetPort: 8051
+    nodePort: 30085
+  type: NodePort

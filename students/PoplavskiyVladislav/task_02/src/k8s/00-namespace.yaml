@@ -1,0 +1,8 @@
+﻿apiVersion: v1
+kind: Namespace
+metadata:
+  name: app17
+  labels:
+    org.bstu.student.slug: "asoi-63-220021-v17"
+    org.bstu.owner: "ImRaDeR1"
+    org.bstu.variant: "17"

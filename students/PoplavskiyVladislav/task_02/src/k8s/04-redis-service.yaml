@@ -1,0 +1,14 @@
+﻿apiVersion: v1
+kind: Service
+metadata:
+  name: web17-redis
+  namespace: app17
+  labels:
+    app: web17-redis
+spec:
+  selector:
+    app: web17-redis
+  ports:
+  - port: 6379
+    targetPort: 6379
+  type: ClusterIP

@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web17
+  namespace: app17
+  labels:
+    app: web17
+    org.bstu.student.fullname: "Vladislav_Vladimirovich_Poplavsky"
+    org.bstu.student.id: "220021"
+    org.bstu.group: "ASOI_63"
+    org.bstu.variant: "17"
+    org.bstu.course: "RSIOT"
+    org.bstu.owner: "ImRaDeR1"
+    org.bstu.student.slug: "asoi-63-220021-v17"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web17
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: web17
+        org.bstu.variant: "17"
+    spec:
+      containers:
+      - name: web17-app
+        image: app:stu-220021-v17
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8051
+        env:
+        - name: STU_ID
+          valueFrom:
+            configMapKeyRef:
+              name: web17-config
+              key: STU_ID
+        - name: STU_GROUP
+          valueFrom:
+            configMapKeyRef:
+              name: web17-config
+              key: STU_GROUP
+        - name: STU_VARIANT
+          valueFrom:
+            configMapKeyRef:
+              name: web17-config
+              key: STU_VARIANT
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: web17-config
+              key: PORT
+        - name: FLASK_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: web17-config
+              key: FLASK_ENV
+        - name: REDIS_HOST
+          valueFrom:
+            secretKeyRef:
+              name: web17-secret
+              key: REDIS_HOST
+        - name: REDIS_PORT
+          valueFrom:
+            secretKeyRef:
+              name: web17-secret
+              key: REDIS_PORT
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "75m"
+          limits:
+            memory: "128Mi"
+            cpu: "150m"
+        livenessProbe:
+          httpGet:
+            path: /ready
+            port: 8051
+          initialDelaySeconds: 10
+          periodSeconds: 15
+          timeoutSeconds: 3
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8051
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 2
+          failureThreshold: 2
+
