@@ -1,0 +1,16 @@
+{
+  "name": "rsiot-task01-v37",
+  "version": "1.0.0",
+  "description": "Lab 01 - Docker containerization with Node/Express",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [],
+  "author": "Немирович Дмитрий Александрович",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "redis": "^4.6.5"
+  }
+}
