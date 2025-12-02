@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web18-ingress
+  namespace: app18
+  labels:
+    app: web18
+    org.bstu.student.fullname: Savko-Pavel-Stanislavovich
+    org.bstu.student.id: "220023"
+    org.bstu.group: AC-63
+    org.bstu.variant: "18"
+    org.bstu.course: RSIOT
+    org.bstu.owner: 1nsirius
+    org.bstu.student.slug: AC-63-220023-v18
+    slug: AC-63--v18
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /web18
+        pathType: Prefix
+        backend:
+          service:
+            name: web18-service
+            port:
+              number: 8052
