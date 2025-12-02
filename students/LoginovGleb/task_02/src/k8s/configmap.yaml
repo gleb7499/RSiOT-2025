@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config-as63-220018-v14
+  namespace: app14
+  labels:
+    app: web14
+    org.bstu.owner: gleb7499
+    org.bstu.student.slug: as63-220018-v14
+    org.bstu.course: RSIOT
+    org.bstu.student.id: "220018"
+    org.bstu.group: "АС-63"
+    org.bstu.variant: "14"
+    org.bstu.student.fullname: "Логинов Глеб Олегович"
+data:
+  STU_ID: "220018"
+  STU_GROUP: "АС-63"
+  STU_VARIANT: "14"
+  APP_PORT: "8062"
+  APP_HOST: "0.0.0.0"

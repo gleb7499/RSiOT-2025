@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: app14
+  labels:
+    org.bstu.owner: gleb7499
+    org.bstu.student.slug: as63-220018-v14
+    org.bstu.course: RSIOT
+    org.bstu.student.id: "220018"
+    org.bstu.group: "АС-63"
+    org.bstu.variant: "14"
+    org.bstu.student.fullname: "Логинов Глеб Олегович"

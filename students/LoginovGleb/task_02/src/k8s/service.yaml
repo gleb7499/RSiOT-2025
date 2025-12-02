@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: net-as63-220018-v14
+  namespace: app14
+  labels:
+    app: web14
+    org.bstu.owner: gleb7499
+    org.bstu.student.slug: as63-220018-v14
+    org.bstu.course: RSIOT
+    org.bstu.student.id: "220018"
+    org.bstu.group: "АС-63"
+    org.bstu.variant: "14"
+    org.bstu.student.fullname: "Логинов Глеб Олегович"
+  annotations:
+    org.bstu.student.fullname: "Логинов Глеб Олегович"
+    org.bstu.description: "ClusterIP service for Flask app (variant 14)"
+spec:
+  type: ClusterIP
+  selector:
+    app: web14
+    org.bstu.student.slug: as63-220018-v14
+  ports:
+    - name: http
+      # Port 80 - стандартный HTTP порт для Ingress/внутреннего доступа
+      # targetPort 8062 - порт приложения согласно варианту 14
+      port: 80
+      targetPort: 8062
+      protocol: TCP
