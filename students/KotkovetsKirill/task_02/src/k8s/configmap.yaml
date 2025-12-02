@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-as64-220044-v35
+  namespace: app35
+  labels:
+    org.bstu.owner: Kirill-Kotkovets
+    org.bstu.student.slug: as64-220044-v35
+data:
+  STU_ID: "220044"
+  STU_GROUP: "АС-64"
+  STU_VARIANT: "35"

@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-as64-220044-v35
+  namespace: app35
+  labels:
+    app: web35
+    org.bstu.owner: Kirill-Kotkovets
+    org.bstu.student.slug: as64-220044-v35
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: web35
+  template:
+    metadata:
+      labels:
+        app: web35
+        org.bstu.owner: Kirill-Kotkovets
+    spec:
+      containers:
+        - name: web35
+          image: web35:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8013
+          envFrom:
+            - configMapRef:
+                name: app-as64-220044-v35
+          resources:
+            requests:
+              cpu: 150m
+              memory: 128Mi
+            limits:
+              cpu: 150m
+              memory: 128Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8013
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8013
+            initialDelaySeconds: 5
+            periodSeconds: 5
