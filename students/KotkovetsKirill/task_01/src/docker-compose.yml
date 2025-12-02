@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    image: flask-app:stu-220044-v35
+    container_name: app-as64-220044-v35
+    ports:
+      - "8013:8013"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PREFIX=stu:220044:v35
+      - STU_ID=220044
+      - STU_GROUP=АС-64
+      - STU_VARIANT=35
+      - PORT=8013
+    depends_on:
+      - redis
+    networks:
+      - net-as64-220044-v35
+    labels:
+      org.bstu.owner: "Kirill-Kotkovets"
+      org.bstu.student.slug: "as64-220044-v35"
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis-as64-220044-v35
+    volumes:
+      - data_v35:/data
+    networks:
+      - net-as64-220044-v35
+    labels:
+      org.bstu.owner: "Kirill-Kotkovets"
+      org.bstu.student.slug: "as64-220044-v35"
+
+networks:
+  net-as64-220044-v35:
+    driver: bridge
+
+volumes:
+  data_v35:
+    driver: local
