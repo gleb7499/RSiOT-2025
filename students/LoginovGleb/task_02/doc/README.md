@@ -548,7 +548,7 @@ kubectl apply -f task_02/src/k8s/ingress.yaml
 
 ### Развертывание с Minikube
 
-#### Создание кластера
+#### Создание кластера Minikube
 
 ```bash
 # Запуск Minikube
@@ -570,7 +570,7 @@ cd task_02/src/app
 docker build -t gleb7499/lab1-v14:stu-220018-v14 .
 ```
 
-#### Применение манифестов
+#### Применение манифестов в Minikube
 
 ```bash
 kubectl apply -k task_02/src/k8s/
