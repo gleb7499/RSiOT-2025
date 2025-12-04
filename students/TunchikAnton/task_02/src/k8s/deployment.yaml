@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web21
+  namespace: app21
+  labels:
+    app: web21
+    org.bstu.student.fullname: "Tunchik Anton Dmitrievich"
+    org.bstu.student.id: "220026"
+    org.bstu.group: "AS-63"
+    org.bstu.variant: "21"
+    org.bstu.course: "RSIOT"
+    org.bstu.owner: "Stis25"
+    org.bstu.student.slug: "AS-63-220026-v21"
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: web21
+  template:
+    metadata:
+      labels:
+        app: web21
+    spec:
+      containers:
+      - name: web21
+        image: rsiot-app:bstu-220026-v21
+        ports:
+        - containerPort: 8041
+        env:
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: web21-config
+              key: PORT
+        - name: STU_VARIANT
+          valueFrom:
+            configMapKeyRef:
+              name: web21-config
+              key: STU_VARIANT
+        - name: STU_GROUP
+          valueFrom:
+            configMapKeyRef:
+              name: web21-config
+              key: STU_GROUP
+        - name: REDIS_ADDR
+          valueFrom:
+            configMapKeyRef:
+              name: web21-config
+              key: REDIS_ADDR
+        - name: STU_ID
+          valueFrom:
+            secretKeyRef:
+              name: web21-secret
+              key: STU_ID
+        - name: GITHUB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: web21-secret
+              key: GITHUB_USERNAME
+        - name: STUDENT_FULLNAME
+          valueFrom:
+            secretKeyRef:
+              name: web21-secret
+              key: STUDENT_FULLNAME
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "75m"
+          limits:
+            memory: "128Mi"
+            cpu: "150m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8041
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 2
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8041
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 2
+          failureThreshold: 2

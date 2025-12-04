@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  app-ASOI-63-220021-v17:
+    container_name: app-ASOI-63-220021-v17
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_UID: 65532
+    image: app:stu-220021-v17
+    environment:
+      - STU_ID=220021
+      - STU_GROUP=ASOI 63
+      - STU_VARIANT=17
+      - REDIS_HOST=redis-ASOI-63-220021-v17
+      - REDIS_PORT=6379
+      - PORT=8051
+    ports:
+      - "8051:8051"
+    volumes:
+      - data-ASOI-63-220021-v17:/app/data
+    depends_on:
+      - redis-ASOI-63-220021-v17
+    networks:
+      - net-ASOI-63-220021-v17
+    labels:
+      org.bstu.owner: "ImRaDeR1"
+      org.bstu.student.slug: "ASOI-63-220021-v17"
+
+  redis-ASOI-63-220021-v17:
+    image: redis:7-alpine
+    container_name: redis-ASOI-63-220021-v17
+    command: ["redis-server", "--save", "60", "1"]
+    volumes:
+      - redis-data-ASOI-63-220021-v17:/data
+    networks:
+      - net-ASOI-63-220021-v17
+    labels:
+      org.bstu.owner: "ImRaDeR1"
+      org.bstu.student.slug: "ASOI-63-220021-v17"
+
+volumes:
+  data-ASOI-63-220021-v17:
+  redis-data-ASOI-63-220021-v17:
+
+networks:
+  net-ASOI-63-220021-v17:
+    driver: bridge

@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web16-service
+  namespace: app16
+  labels:
+    app: web16
+    org.bstu.student.fullname: "Nikiforov-Alexandr"
+    org.bstu.student.id: "220020"
+    org.bstu.group: "AS-63"
+    org.bstu.variant: "16"
+    org.bstu.course: "RSIOT"
+    org.bstu.owner: "woqhy"
+    org.bstu.student.slug: "as-63-220020-v16"
+spec:
+  selector:
+    app: web16
+  ports:
+  - name: http
+    port: 8064
+    targetPort: 8064
+    protocol: TCP
+  type: ClusterIP

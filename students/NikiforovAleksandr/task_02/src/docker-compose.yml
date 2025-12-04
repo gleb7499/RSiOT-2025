@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  web16-test:
+    image: lab01-node-express-pg:stu-220020-v16
+    container_name: web16-test
+    environment:
+      STU_ID: "220020"
+      STU_GROUP: "AS-63"
+      STU_VARIANT: "v16"
+      PORT: "8064"
+      NODE_ENV: "test"
+      DATABASE_URL: "postgres://app:app@postgres:5432/app_220020_v16"
+    ports:
+      - "8064:8064"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8064/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres-test
+    environment:
+      POSTGRES_DB: "app_220020_v16"
+      POSTGRES_USER: "app"
+      POSTGRES_PASSWORD: "app"
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app"]
+      interval: 5s
+      timeout: 5s
+      retries: 5

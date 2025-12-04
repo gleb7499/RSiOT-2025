@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web21
+  namespace: app21
+  labels:
+    app: web21
+    org.bstu.student.fullname: "Tunchik Anton Dmitrievich"
+    org.bstu.student.id: "220026"
+    org.bstu.group: "AS-63"
+    org.bstu.variant: "21"
+    org.bstu.course: "RSIOT"
+    org.bstu.owner: "Stis25"
+spec:
+  selector:
+    app: web21
+  ports:
+  - port: 8041
+    targetPort: 8041
+  type: ClusterIP

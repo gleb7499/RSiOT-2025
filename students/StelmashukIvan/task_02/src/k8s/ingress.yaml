@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web20
+  namespace: app20
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  labels:
+    org.bstu.student.fullname: "Stelmashuk_Ivan_Aleksandrovich"
+    org.bstu.student.id: "220025"
+    org.bstu.group: "AS-63"
+    org.bstu.variant: "20"
+    org.bstu.course: "RSIOT"
+    org.bstu.owner: "KulibinI"
+    org.bstu.student.slug: "as-63-220025-v20"
+spec:
+  rules:
+    - host: web20.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web20
+                port:
+                  number: 80

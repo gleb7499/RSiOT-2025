@@ -1,0 +1,59 @@
+volumes:
+  data-as63-220012-v8:
+    name: data-as63-220012-v8
+
+networks:
+  net-as63-220012-v8:
+    name: net-as63-220012-v8
+    driver: bridge
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: db-as63-220012-v8
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: app_220012_v8
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: app_pass
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "app_user"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - data-as63-220012-v8:/var/lib/postgresql/data
+    networks:
+      - net-as63-220012-v8
+    labels:
+      org.bstu.owner: "annkrq"
+      org.bstu.student.slug: "as63-220012-v8"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: annkrq/lab1-v8:stu-220012-v8
+    container_name: app-as63-220012-v8
+    restart: unless-stopped
+    environment:
+      STU_ID: "220012"
+      STU_GROUP: "АС-63"
+      STU_VARIANT: "8"
+      APP_PORT: "8094"
+      APP_HOST: "0.0.0.0"
+      DATABASE_URL: postgresql://app_user:app_pass@db:5432/app_220012_v8
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8094:8094"
+    networks:
+      - net-as63-220012-v8
+    labels:
+      org.bstu.owner: "annkrq"
+      org.bstu.student.slug: "as63-220012-v8"
+    # Базовые security-настройки (опционально, но полезно):
+    read_only: true
+    tmpfs:
+      - /tmp

@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web21-ingress
+  namespace: app21
+  labels:
+    app: web21
+    org.bstu.course: "RSIOT"
+    org.bstu.owner: "Stis25"
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web21
+            port:
+              number: 8041

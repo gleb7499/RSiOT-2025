@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: app18
+  labels:
+    org.bstu.student.fullname: Savko-Pavel-Stanislavovich
+    org.bstu.student.id: "220023"
+    org.bstu.group: AC-63
+    org.bstu.variant: "18"
+    org.bstu.course: RSIOT
+    org.bstu.owner: 1nsirius
+    org.bstu.student.slug: AC-63-220023-v18
+    slug: AC-63--v18

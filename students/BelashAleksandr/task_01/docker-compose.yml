@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    image: rsiot-lab01:stu-220031-v25
+    container_name: app-as64-220031-v25
+    ports:
+      - "8031:8031"
+    environment:
+      - PORT=8031
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - STU_ID=220031
+      - STU_GROUP=АС-64
+      - STU_VARIANT=25
+    depends_on:
+      - redis
+    networks:
+      - net-as64-220031-v25
+    labels:
+      - "org.bstu.owner=went2smoke"
+      - "org.bstu.student.slug=as64-220031-v25"
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis-as64-220031-v25
+    volumes:
+      - data-as64-220031-v25:/data
+    networks:
+      - net-as64-220031-v25
+    labels:
+      - "org.bstu.owner=went2smoke"
+      - "org.bstu.student.slug=as64-220031-v25"
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+
+volumes:
+  data-as64-220031-v25:
+    name: data-as64-220031-v25
+
+networks:
+  net-as64-220031-v25:
+    name: net-as64-220031-v25
+    driver: bridge

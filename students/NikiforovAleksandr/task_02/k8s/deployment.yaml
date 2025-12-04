@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web16-deployment
+  namespace: app16
+  labels:
+    app: web16
+    org.bstu.student.fullname: "Nikiforov-Alexandr"
+    org.bstu.student.id: "220020"
+    org.bstu.group: "AS-63"
+    org.bstu.variant: "16"
+    org.bstu.course: "RSIOT"
+    org.bstu.owner: "woqhy"
+    org.bstu.student.slug: "as-63-220020-v16"
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: web16
+  template:
+    metadata:
+      labels:
+        app: web16
+        version: "1.0.0"
+        org.bstu.student.slug: "as-63-220020-v16"
+    spec:
+      containers:
+      - name: web16
+        image: lab01-node-express-pg:stu-220020-v16
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8064
+          name: http
+        env:
+        - name: STU_ID
+          value: "220020"
+        - name: STU_GROUP
+          value: "AS-63"
+        - name: STU_VARIANT
+          value: "v16"
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: web16-config
+              key: PORT
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: web16-config
+              key: NODE_ENV
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: web16-secret
+              key: DATABASE_URL
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8064
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+          successThreshold: 1
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8064
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 1
+          successThreshold: 1
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 10"]

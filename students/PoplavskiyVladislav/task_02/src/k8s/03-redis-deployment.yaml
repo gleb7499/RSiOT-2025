@@ -1,0 +1,31 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web17-redis
+  namespace: app17
+  labels:
+    app: web17-redis
+    org.bstu.variant: "17"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web17-redis
+  template:
+    metadata:
+      labels:
+        app: web17-redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:alpine
+        ports:
+        - containerPort: 6379
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        args: ["redis-server", "--save", "60", "1"]

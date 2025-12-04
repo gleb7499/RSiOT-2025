@@ -1,0 +1,60 @@
+networks:
+  internal:
+    name: net-${SLUG}
+
+volumes:
+  data_v16:
+    name: data_v16
+
+services:
+  app:
+    image: lab01-node-express-pg:stu-${STU_ID}-v16
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app-${SLUG}
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      STU_ID: "${STU_ID}"
+      STU_GROUP: "${STU_GROUP}"
+      STU_VARIANT: "v16"
+      PORT: "${PORT}"
+      DATABASE_URL: "${DATABASE_URL}"
+    ports:
+      - "${PORT}:${PORT}"
+    labels:
+      org.bstu.owner: "${GITHUB_USERNAME}"
+      org.bstu.student.slug: "${SLUG}"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:${PORT}/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    networks:
+      - internal
+
+  db:
+    image: postgres:16-alpine
+    container_name: pg-${SLUG}
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: "app_${STU_ID}_v16"
+      POSTGRES_USER: "app"
+      POSTGRES_PASSWORD: "app"
+    volumes:
+      - data_v16:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+    labels:
+      org.bstu.owner: "${GITHUB_USERNAME}"
+      org.bstu.student.slug: "${SLUG}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d app_${STU_ID}_v16"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - internal
