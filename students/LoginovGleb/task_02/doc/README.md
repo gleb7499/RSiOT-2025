@@ -93,34 +93,138 @@ annotations:
 ```text
 task_02/
 ├── doc/
-│   └── README.md           # Документация (этот файл)
+│   └── README.md               # Документация (этот файл)
+├── materials/
+│   ├── extra-info.md           # Дополнительная информация от преподавателя
+│   └── previous-promt.md       # Методичка и каркас отчета
 └── src/
-    └── k8s/                # Kubernetes манифесты
-        ├── kustomization.yaml   # Kustomize конфигурация
-        ├── namespace.yaml       # Namespace app14
-        ├── configmap.yaml       # Конфигурация приложения (ENV)
-        ├── secret.yaml          # Секреты (DB credentials)
-        ├── pvc.yaml             # PersistentVolumeClaim для PostgreSQL
-        ├── db-deployment.yaml   # Deployment для PostgreSQL
-        ├── db-service.yaml      # Service для PostgreSQL (ClusterIP)
-        ├── deployment.yaml      # Deployment для Flask приложения
-        ├── service.yaml         # Service для Flask (ClusterIP)
-        └── ingress.yaml         # Ingress (nginx) для внешнего доступа
+    ├── app/                    # Исходный код приложения
+    │   ├── .dockerignore       # Исключения для Docker
+    │   ├── Dockerfile          # Multi-stage Dockerfile
+    │   ├── requirements.txt    # Зависимости Python
+    │   └── src/
+    │       └── app.py          # Flask HTTP-сервис
+    └── k8s/                    # Kubernetes манифесты
+        ├── kustomization.yaml  # Kustomize конфигурация
+        ├── namespace.yaml      # Namespace app14
+        ├── configmap.yaml      # Конфигурация приложения (ENV)
+        ├── secret.yaml         # Секреты (DB credentials)
+        ├── pvc.yaml            # PersistentVolumeClaim для PostgreSQL
+        ├── db-deployment.yaml  # Deployment для PostgreSQL
+        ├── db-service.yaml     # Service для PostgreSQL (ClusterIP)
+        ├── deployment.yaml     # Deployment для Flask приложения
+        ├── service.yaml        # Service для Flask (ClusterIP)
+        └── ingress.yaml        # Ingress (nginx) для внешнего доступа
 ```
 
 ---
 
 ## Подробное описание выполнения
 
-### 1. Подготовка HTTP-сервиса
+### 1. Подготовка HTTP-сервиса и контейнерного образа
 
-Используется HTTP-сервис из ЛР01 (task_01), который соответствует всем требованиям:
+#### Dockerfile (multi-stage build)
 
-- **Multi-stage Dockerfile** — финальный образ ≤ 150 MB
-- **Non-root пользователь** — UID 10001
-- **Health endpoints** — `/healthz` для liveness/readiness проверок
+Dockerfile находится в `task_02/src/app/Dockerfile` и использует multi-stage сборку для минимизации размера образа:
+
+```dockerfile
+# ---- Builder stage ----
+FROM python:3.11-alpine AS builder
+
+ARG PIP_NO_CACHE_DIR=1
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+RUN apk add --no-cache build-base=0.5-r3
+
+WORKDIR /app
+
+COPY requirements.txt ./
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+
+# ---- Final stage ----
+FROM python:3.11-alpine AS final
+
+LABEL org.bstu.student.fullname="Логинов Глеб Олегович" \
+      org.bstu.student.id="220018" \
+      org.bstu.group="АС-63" \
+      org.bstu.variant="14" \
+      org.bstu.course="RSIOT" \
+      org.bstu.owner="gleb7499" \
+      org.bstu.student.slug="as63-220018-v14"
+
+ENV STU_ID=220018 \
+    STU_GROUP=АС-63 \
+    STU_VARIANT=14 \
+    APP_PORT=8062 \
+    APP_HOST=0.0.0.0 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+# Создание non-root пользователя для безопасности
+RUN adduser -D -u 10001 appuser
+
+WORKDIR /app
+
+COPY --from=builder /install /usr/local
+COPY src/app.py ./
+
+EXPOSE 8062
+
+RUN apk add --no-cache wget=1.25.0-r1 \
+    && echo 'hosts: files dns' > /etc/nsswitch.conf
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD wget --no-hsts -qO- http://127.0.0.1:${APP_PORT}/healthz || exit 1
+
+# Запуск от non-root пользователя (UID 10001)
+USER 10001
+
+ENTRYPOINT ["python", "app.py"]
+```
+
+**Особенности Dockerfile:**
+
+- **Multi-stage build** — первый stage (builder) устанавливает зависимости, второй stage (final) содержит только runtime
+- **Non-root пользователь** — UID 10001 (appuser) для безопасности
+- **Health endpoint** — `/healthz` для liveness/readiness проверок
+- **Labels** — все необходимые метаданные org.bstu.*
+- **Финальный образ ≤ 150 MB** — благодаря Alpine и multi-stage
+
+#### Сборка образа
+
+```bash
+# Из директории task_02/src/app
+cd task_02/src/app
+docker build -t gleb7499/lab1-v14:stu-220018-v14 .
+
+# Проверка размера образа (должен быть ≤ 150MB)
+docker images gleb7499/lab1-v14:stu-220018-v14
+
+# Запуск для проверки
+docker run -d -p 8062:8062 --name test-app gleb7499/lab1-v14:stu-220018-v14
+
+# Проверка health endpoint
+curl http://localhost:8062/healthz
+
+# Проверка логов (должны быть STU_ID, STU_GROUP, STU_VARIANT)
+docker logs test-app
+
+# Проверка graceful shutdown
+docker stop test-app
+
+# Очистка
+docker rm test-app
+```
+
+#### Flask приложение (app.py)
+
+Приложение реализует:
+
+- **Health endpoint** `/healthz` — возвращает JSON `{"status": "ok", "timestamp": "..."}`
+- **Логирование при запуске** — выводит STU_ID, STU_GROUP, STU_VARIANT
 - **Graceful shutdown** — корректная обработка SIGTERM/SIGINT
-- **Логирование** — вывод STU_ID, STU_GROUP, STU_VARIANT при запуске
+- **Echo endpoint** `/echo` — для тестирования POST запросов
 
 **Образ:** `gleb7499/lab1-v14:stu-220018-v14`
 
@@ -374,8 +478,6 @@ labels:
       org.bstu.student.id: "220018"
       org.bstu.group: "АС-63"
       org.bstu.variant: "14"
-    includeSelectors: true
-    includeTemplates: true
 
 commonAnnotations:
   org.bstu.student.fullname: "Логинов Глеб Олегович"
@@ -391,6 +493,13 @@ resources:
   - service.yaml
   - ingress.yaml
 ```
+
+**Преимущества Kustomize:**
+
+- Централизованное управление labels на всех ресурсах
+- Автоматическое добавление annotations
+- Параметризация namespace
+- Стандартный синтаксис без нестандартных расширений
 
 ---
 
@@ -411,8 +520,8 @@ kubectl cluster-info --context kind-lab2
 #### Загрузка образа в Kind
 
 ```bash
-# Сборка образа (из task_01)
-cd task_01/src
+# Сборка образа (из task_02/src/app)
+cd task_02/src/app
 docker build -t gleb7499/lab1-v14:stu-220018-v14 .
 
 # Загрузка образа в кластер Kind
@@ -457,7 +566,7 @@ minikube status
 ```bash
 # Использование Docker daemon Minikube
 eval $(minikube docker-env)
-cd task_01/src
+cd task_02/src/app
 docker build -t gleb7499/lab1-v14:stu-220018-v14 .
 ```
 
@@ -690,7 +799,12 @@ curl http://localhost:8062/healthz
 | Требование | Статус |
 |------------|--------|
 | README с полными метаданными студента | ✅ |
-| Dockerfile (multi-stage, non-root, labels) | ✅ (task_01) |
+| Dockerfile (multi-stage, non-root, labels) в task_02 | ✅ |
+| Финальный образ ≤ 150 MB | ✅ |
+| Non-root пользователь (UID 10001) | ✅ |
+| Health endpoints (/healthz) | ✅ |
+| Graceful shutdown (SIGTERM/SIGINT) | ✅ |
+| Логирование STU_ID, STU_GROUP, STU_VARIANT | ✅ |
 | Kubernetes Deployment с replicas=3 | ✅ |
 | Kubernetes Deployment с RollingUpdate strategy | ✅ |
 | Kubernetes Deployment с resources limits (cpu=200m, mem=192Mi) | ✅ |
@@ -709,13 +823,7 @@ curl http://localhost:8062/healthz
 | Инструкции для Minikube | ✅ |
 | Smoke-test проверка | ✅ |
 | Kustomize для управления манифестами (БОНУС) | ✅ |
-
----
-
-## Ссылки
-
-- [Docker Hub образ](https://hub.docker.com/r/gleb7499/lab1-v14)
-- [GitHub репозиторий](https://github.com/gleb7499/RSiOT-2025-Loginov)
+| PVC + демонстрация использования для PostgreSQL (БОНУС) | ✅ |
 
 ---
 

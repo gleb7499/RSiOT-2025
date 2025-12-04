@@ -11,8 +11,6 @@ labels:
       org.bstu.student.id: "220018"
       org.bstu.group: "АС-63"
       org.bstu.variant: "14"
-    includeSelectors: true
-    includeTemplates: true
 
 commonAnnotations:
   org.bstu.student.fullname: "Логинов Глеб Олегович"
