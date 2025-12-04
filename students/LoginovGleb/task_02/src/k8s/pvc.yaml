@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-pvc-as63-220018-v14
+  namespace: app14
+  labels:
+    app: postgres-db
+    org.bstu.owner: gleb7499
+    org.bstu.student.slug: as63-220018-v14
+    org.bstu.course: RSIOT
+    org.bstu.student.id: "220018"
+    org.bstu.group: "АС-63"
+    org.bstu.variant: "14"
+    org.bstu.student.fullname: "Логинов Глеб Олегович"
+spec:
+  # storageClassName не указан - будет использован default storage class
+  # Для Kind/Minikube это обычно standard или hostpath
+  # Для production укажите конкретный storageClassName
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

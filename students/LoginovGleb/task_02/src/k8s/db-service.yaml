@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: data-db-as63-220018-v14
+  namespace: app14
+  labels:
+    app: postgres-db
+    org.bstu.owner: gleb7499
+    org.bstu.student.slug: as63-220018-v14
+    org.bstu.course: RSIOT
+    org.bstu.student.id: "220018"
+    org.bstu.group: "АС-63"
+    org.bstu.variant: "14"
+    org.bstu.student.fullname: "Логинов Глеб Олегович"
+spec:
+  type: ClusterIP
+  selector:
+    app: postgres-db
+    org.bstu.student.slug: as63-220018-v14
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+      protocol: TCP

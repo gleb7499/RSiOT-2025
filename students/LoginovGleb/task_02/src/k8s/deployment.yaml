@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-as63-220018-v14
+  namespace: app14
+  labels:
+    app: web14
+    org.bstu.owner: gleb7499
+    org.bstu.student.slug: as63-220018-v14
+    org.bstu.course: RSIOT
+    org.bstu.student.id: "220018"
+    org.bstu.group: "АС-63"
+    org.bstu.variant: "14"
+    org.bstu.student.fullname: "Логинов Глеб Олегович"
+  annotations:
+    org.bstu.student.fullname: "Логинов Глеб Олегович"
+    org.bstu.description: "Flask HTTP service for Kubernetes lab (variant 14)"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web14
+      org.bstu.student.slug: as63-220018-v14
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: web14
+        org.bstu.owner: gleb7499
+        org.bstu.student.slug: as63-220018-v14
+        org.bstu.course: RSIOT
+        org.bstu.student.id: "220018"
+        org.bstu.group: "АС-63"
+        org.bstu.variant: "14"
+      annotations:
+        org.bstu.student.fullname: "Логинов Глеб Олегович"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+      containers:
+        - name: web14
+          image: gleb7499/lab1-v14:stu-220018-v14
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8062
+              protocol: TCP
+              name: http
+          envFrom:
+            - configMapRef:
+                name: app-config-as63-220018-v14
+            - secretRef:
+                name: data-secret-as63-220018-v14
+          resources:
+            # Requests < limits: QoS class будет Burstable (не Guaranteed)
+            # что позволяет burst при наличии свободных ресурсов
+            requests:
+              memory: "96Mi"
+              cpu: "100m"
+            # Limits согласно варианту 14: cpu=200m, mem=192Mi
+            limits:
+              memory: "192Mi"
+              cpu: "200m"
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8062
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8062
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: tmp-volume
+              mountPath: /tmp
+      volumes:
+        - name: tmp-volume
+          emptyDir: {}
+      terminationGracePeriodSeconds: 30
