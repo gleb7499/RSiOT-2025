@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: app35
+  labels:
+    org.bstu.owner: Kirill-Kotkovets
+    org.bstu.student.slug: as64-220044-v35
